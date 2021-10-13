@@ -50,6 +50,8 @@ define(
                 },
                 customerAddressId: null
             },
+            addressUpadated = false,
+            addressEdited = false,
             countryData = customerData.get('directory-data'),
             addressOptions = addressList().filter(function (address) {
                 return address.getType() == 'customer-address';
@@ -155,6 +157,8 @@ define(
              * Update address action
              */
             updateAddress: function () {
+                addressUpadated = true;
+
                 if (this.selectedAddress() && this.selectedAddress() != newAddressOption &&
                     (
                     this.selectedAddress().firstname.toLowerCase().indexOf("postnl") == -1 &&
@@ -194,6 +198,8 @@ define(
              * Edit address action
              */
             editAddress: function () {
+                addressUpadated = false;
+                addressEdited = true;
                 lastSelectedBillingAddress = quote.billingAddress();
                 quote.billingAddress(null);
                 this.isAddressDetailsVisible(false);
@@ -203,6 +209,7 @@ define(
              * Cancel address edit action
              */
             cancelAddressEdit: function () {
+                addressUpadated = true;
                 this.restoreBillingAddress();
 
                 if (quote.billingAddress()) {
@@ -222,6 +229,15 @@ define(
             canUseCancelBillingAddress: ko.computed(function () {
                 return quote.billingAddress() || lastSelectedBillingAddress;
             }),
+
+            /**
+             * Check if Billing Address Changes should be canceled
+             */
+            needCancelBillingAddressChanges: function () {
+                if (addressEdited && !addressUpadated) {
+                    this.cancelAddressEdit();
+                }
+            },
 
             /**
              * Restore billing address
