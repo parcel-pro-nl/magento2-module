@@ -7,21 +7,26 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
-Parcel Pro heeft een module ontwikkeld die geinstalleerd kan worden in de backoffice van Magento. Hiermee kunt u heel gemakkelijk orders inladen in ons verzendsysteem. Dit zorgt ervoor dat het verzendproces efficiënter wordt en het helpt u bij het verwerken van meerdere orders en zendingen.
+Parcel Pro heeft een module ontwikkeld die geïnstalleerd kan worden in de backoffice van Magento. Hiermee kunt u heel gemakkelijk orders inladen in ons verzendsysteem. Dit zorgt ervoor dat het verzendproces efficiënter wordt en het helpt u bij het verwerken van meerdere orders en zendingen.
 
 De handleiding is te vinden op https://www.parcelpro.nl/koppelingen/magento
-Deze repository zal geplaats moeten worden in uw app/code/Parcelpro/Shipment directory geplaatst moeten worden.
+Deze repository zal geplaatst moeten worden in uw app/code/Parcelpro/Shipment directory geplaatst moeten worden.
 
 Bij vragen kunt u contact opnemen via https://www.parcelpro.nl/over-ons/
 
 == Changelog ==
 
+## V.2.11.1- 2021-12-14
+#### Fixes
+- Config.xml string value aangepast aan de hand van de commit van frank-bokdam.
+- Composer.json aangepast voor betere ondersteuning aan de hand van de commit van govereem.
+
 ## V.2.11.0- 2021-03-29
 #### Nieuwe functionaliteiten
 - Bij orders kunnen nu individuele verzendmethodes gekozen uit de custom regels en opgeslagen worden.
 #### Fixes
-- Verzendmethodes worden nu beter gelaten aan de hand van de commit van Tjitse-E.
-- Lowercase composer.json aan de hand van meerdere requests. 
+- Verzendmethodes worden nu beter geladen aan de hand van de commit van Tjitse-E.
+- Lowercase composer.json aan de hand van meerdere requests.
 
 ## V.2.10.0- 2020-09-17
 #### Fixes
