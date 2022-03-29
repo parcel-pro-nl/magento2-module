@@ -32,10 +32,10 @@ define(
             saveShippingInformation: function () {
                 var payload;
 
-                if (!quote.billingAddress() || (quote.shippingMethod().method_code == 'postnl_pakjegemak' || quote.shippingMethod().method_code == 'dhl_parcelshop')) {
+                if (!quote.billingAddress() || (quote.shippingMethod().method_code == 'postnl_pakjegemak' || quote.shippingMethod().method_code == 'dpd_parcelshop' || quote.shippingMethod().method_code == 'dhl_parcelshop')) {
                     if(quote.billingAddress() === null) selectBillingAddressAction(quote.shippingAddress());
                     var billingstreet = quote.billingAddress().street[0];
-                    if(quote.shippingMethod().method_code == 'postnl_pakjegemak' || quote.shippingMethod().method_code == 'dhl_parcelshop'){
+                    if(quote.shippingMethod().method_code == 'postnl_pakjegemak' || quote.shippingMethod().method_code == 'dhl_parcelshop' || quote.shippingMethod().method_code == 'dpd_parcelshop'){
 
                         quote.shippingAddress().company = jQuery("#shipping_method\\:company").val();
                         quote.shippingAddress().firstname = jQuery("#shipping_method\\:firstname").val();
@@ -52,7 +52,8 @@ define(
                     }
                     if(
                         quote.shippingAddress().firstname.toLowerCase().indexOf("postnl") == -1 &&
-                        quote.shippingAddress().firstname.toLowerCase().indexOf("dhl") == -1
+                        quote.shippingAddress().firstname.toLowerCase().indexOf("dhl") == -1 &&
+                        quote.shippingAddress().firstname.toLowerCase().indexOf("dpd") == -1
                     ){
                         quote.billingAddress().street[0] = billingstreet;
                         selectBillingAddressAction(quote.billingAddress());
