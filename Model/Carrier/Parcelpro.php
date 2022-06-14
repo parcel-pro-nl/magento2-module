@@ -59,6 +59,9 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
             'dhl_pricerule' => 'Pricerule',
             'vsp_bp' => 'Brievenbuspakje',
             'sameday_dc' => 'Sameday',
+            'dpd_b2c' => 'Afleveradres (woonadres)',
+            'dpd_b2b' => 'Afleveradres (zakelijk)',
+            'dpd_parcelshop' => 'Parcel Shop',
             'custom_pricerule' => 'Pricerule'
         ];
     }

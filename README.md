@@ -16,6 +16,10 @@ Bij vragen kunt u contact opnemen via https://www.parcelpro.nl/over-ons/
 
 == Changelog ==
 
+## V.2.12.0- 2022-03-29
+#### New
+- DPD toegevoegd aan vervoerders, met parcelshop.
+
 ## V.2.11.1- 2021-12-14
 #### Fixes
 - Config.xml string value aangepast aan de hand van de commit van frank-bokdam.

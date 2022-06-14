@@ -129,6 +129,13 @@ define(
                 jQuery(label).html(firstname + " " + lastname + " <strong>" + priceHtml + "<strong>");
                 return true;
             }
+            if (firstname == "DPD ParcelShop") {
+                var label = jQuery('label[for="s_method_parcelpro_dpd_parcelshop"]');
+                var price = jQuery('span', label);
+                var priceHtml = jQuery('<div>').append(price.clone()).html();
+                jQuery(label).html(firstname + " " + lastname + " <strong>" + priceHtml + "<strong>");
+                return true;
+            }
             return false;
         }
 
@@ -211,6 +218,10 @@ define(
                         jQuery('#modal').show();
                         jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=DHL');
                     }
+                    if(shippingMethod.method_code =="dpd_parcelshop"){
+                        jQuery('#modal').show();
+                        jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=DPD');
+                    }
                     return true;
                 },
 
@@ -228,7 +239,7 @@ define(
                 validateShippingInformation: function () {
                     var result;
                     if(quote.shippingMethod()){
-                      if (quote.shippingMethod().method_code == "postnl_pakjegemak" || quote.shippingMethod().method_code == "dhl_parcelshop") {
+                      if (quote.shippingMethod().method_code == "postnl_pakjegemak" || quote.shippingMethod().method_code == "dhl_parcelshop" || quote.shippingMethod().method_code == "dpd_parcelshop" ) {
                           if (jQuery("#shipping_method\\:company").val() === "") {
                               this.errorValidationMessage('Selecteer een afhaallocatie of een andere verzendmethode');
                               return false;

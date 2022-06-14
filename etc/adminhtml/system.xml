@@ -163,6 +163,21 @@
                     <frontend_model>Parcelpro\Shipment\Block\Adminhtml\System\Config\Form\Field\Countriesmap</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                 </field>
+                <field id="dpd_b2c" translate="label" type="text" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>DPD Business to Customer</label>
+                    <frontend_model>Parcelpro\Shipment\Block\Adminhtml\System\Config\Form\Field\Countriesmap</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+                <field id="dpd_b2b" translate="label" type="text" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>DPD Business to Business</label>
+                    <frontend_model>Parcelpro\Shipment\Block\Adminhtml\System\Config\Form\Field\Countriesmap</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+                <field id="dpd_parcelshop" translate="label" type="text" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>DPD Business to Customer (Parcelshop)</label>
+                    <frontend_model>Parcelpro\Shipment\Block\Adminhtml\System\Config\Form\Field\Countriesmap</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
                 <field id="custom_title" translate="label" type="text" sortOrder="600" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Eigen verzendopties via parcelpro.nl</label>
                 </field>

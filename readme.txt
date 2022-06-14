@@ -2,7 +2,6 @@
 Tags: Shipping, Verzending, Pakketten, PostNL, DHL, DPD, UPS, GLS, Multi Carrier, Shops United Parcel Pro, Parcelpro
 Requires at least: Magento 2.x
 Tested up to: 2.4.0
-Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
