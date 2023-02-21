@@ -16,6 +16,10 @@ Bij vragen kunt u contact opnemen via https://www.parcelpro.nl/over-ons/
 
 == Changelog ==
 
+## V.2.13.0 - 2023-02-02
+#### New
+- PHP 8+ toegevoegd aan composer.json
+
 ## V.2.12.0- 2022-03-29
 #### New
 - DPD toegevoegd aan vervoerders, met parcelshop.

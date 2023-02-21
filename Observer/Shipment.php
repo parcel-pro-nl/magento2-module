@@ -120,26 +120,28 @@ class Shipment implements ObserverInterface {
 
                         if ($response_code != 200) throw new \Magento\Framework\Exception\LocalizedException(__(sprintf("De zending is niet succesvol aangemeld bij ParcelPro foutcode: %s, melding: %s", $response_code, $response_body['omschrijving']), 10));
 
-                        $firstTwoCharOfBarcode = substr($response_body['Barcode'], 0, 2);
-                        $carrier = false;
-                        if(isset($shipping_title) && array_key_exists($shipping_title,$config))
-                            $carrier = $config[$shipping_title];
+                        if (isset($response_body['Barcode'])) {
+                            $firstTwoCharOfBarcode = substr($response_body['Barcode'], 0, 2);
+                            $carrier = false;
+                            if (isset($shipping_title) && array_key_exists($shipping_title, $config))
+                                $carrier = $config[$shipping_title];
 
-                        if(!$carrier) {
-                            if ($firstTwoCharOfBarcode === "3S") {
-                                $carrier = "PostNL via Parcel Pro";
-                            } else if ($firstTwoCharOfBarcode === "JJ") {
-                                $carrier = "DHL via Parcel Pro";
-                            } else {
-                                $carrier = $response_body['Carrier'];
+                            if (!$carrier) {
+                                if ($firstTwoCharOfBarcode === "3S") {
+                                    $carrier = "PostNL via Parcel Pro";
+                                } else if ($firstTwoCharOfBarcode === "JJ") {
+                                    $carrier = "DHL via Parcel Pro";
+                                } else {
+                                    $carrier = $response_body['Carrier'];
+                                }
                             }
+
+                            $data = ['zending_id' => $response_body['Id'], 'order_id' => $order_id, 'barcode' => $response_body['Barcode'], 'carrier' => $carrier, 'url' => $response_body['TrackingUrl'], 'label_url' => $response_body['LabelUrl']];
+
+                            $parcelproModel = $this->_modelParcelproFactory->create();
+                            $parcelproModel->setData($data);
+                            $parcelproModel->save();
                         }
-
-                        $data = ['zending_id' => $response_body['Id'], 'order_id' => $order_id, 'barcode' => $response_body['Barcode'], 'carrier' => $carrier, 'url' => $response_body['TrackingUrl'], 'label_url' => $response_body['LabelUrl']];
-
-                        $parcelproModel = $this->_modelParcelproFactory->create();
-                        $parcelproModel->setData($data);
-                        $parcelproModel->save();
                     }
                 }
             }
