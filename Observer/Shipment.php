@@ -151,7 +151,7 @@ class Shipment implements ObserverInterface {
     }
 
     public function getShippingMethod($key, $order){
-        if (strpos($key, 'custom_pricerule') !== false) {
+        if (isset($key) && strpos($key, 'custom_pricerule') !== false) {
 
             $pieces = explode("parcelpro_", $key);
             $pieces = explode("custom_pricerule_", $pieces[1]);
