@@ -15,6 +15,8 @@ Deze repository zal geplaatst moeten worden in uw app/code/Parcelpro/Shipment di
 Bij vragen kunt u contact opnemen via https://www.parcelpro.nl/over-ons/
 
 == Changelog ==
+## V.2.14.0 - 2023-03-22
+- isset() toegevoegd aan Controller/Adminhtml/Shipment/Index.php regel 154
 
 ## V.2.13.0 - 2023-02-02
 #### New
