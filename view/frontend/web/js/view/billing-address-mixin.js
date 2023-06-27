@@ -12,7 +12,7 @@ define([
                 this._super();
 
                 if (this.isAddressSameAsShipping() ) {
-                    if(quote.shippingMethod().method_code != 'postnl_pakjegemak' && quote.shippingMethod().method_code != 'dhl_parcelshop' && quote.shippingMethod().method_code != "dpd_parcelshop" ){
+                    if(quote.shippingMethod().method_code != 'postnl_pakjegemak' && quote.shippingMethod().method_code != 'dhl_parcelshop' && quote.shippingMethod().method_code != "dpd_parcelshop" && quote.shippingMethod().method_code != "intrapost_parcelshop"){
                         selectBillingAddress(quote.billingAddress());
                         this.updateAddresses();
                         this.isAddressDetailsVisible(true);

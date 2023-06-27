@@ -62,6 +62,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
             'dpd_b2c' => 'Afleveradres (woonadres)',
             'dpd_b2b' => 'Afleveradres (zakelijk)',
             'dpd_parcelshop' => 'Parcel Shop',
+            'intrapost_parcelshop'=> 'Parcelshop',
             'custom_pricerule' => 'Pricerule'
         ];
     }
@@ -76,6 +77,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         if ($matches[0] === 'postnl') $rate->setCarrierTitle($this->getConfigData('postnl_title'));
         if ($matches[0] === 'vsp') $rate->setCarrierTitle($this->getConfigData('vsp_title'));
         if ($matches[0] === 'sameday') $rate->setCarrierTitle($this->getConfigData('sameday_title'));
+        if ($matches[0] === 'intrapost') $rate->setCarrierTitle($this->getConfigData('intrapost_title'));
 
         $rate->setMethod($key);
         $rate->setMethodTitle($value);
@@ -155,6 +157,8 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                             $method->setCarrierTitle('Van Straaten Post');
                         } else if (strpos(strtolower($key), 'sameday') !== false) {
                             $method->setCarrierTitle('Sameday');
+                        } else if (strpos(strtolower($key), 'intrapost') !== false) {
+                            $method->setCarrierTitle('Intrapost');
                         }
                         $method->setMethod($key);
                         $method->setMethodTitle($pricerule['titel']);

@@ -10,6 +10,7 @@
                 <auto>0</auto>
                 <postnl_title>PostNL versturen via parcelpro.nl</postnl_title>
                 <dhl_title>DHL versturen via parcelpro.nl</dhl_title>
+                <intrapost_title>Intrapost versturen via parcelpro.nl</intrapost_title>
                 <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
             </parcelpro>
         </carriers>

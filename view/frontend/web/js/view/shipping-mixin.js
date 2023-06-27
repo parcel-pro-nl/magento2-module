@@ -136,6 +136,13 @@ define(
                 jQuery(label).html(firstname + " " + lastname + " <strong>" + priceHtml + "<strong>");
                 return true;
             }
+            if (firstname == "Intrapost Parcelshop") {
+                var label = jQuery('label[for="s_method_parcelpro_intrapost_parcelshop"]');
+                var price = jQuery('span', label);
+                var priceHtml =jQuery('<div>').append(price.clone()).html();
+                jQuery(label).html(firstname + " " + lastname + " <strong>" + priceHtml + "<strong>");
+                return true;
+            }
             return false;
         }
 
@@ -162,7 +169,7 @@ define(
                         }
                     });
 
-                    if(window.checkoutConfig.selectedShippingMethod && (window.checkoutConfig.selectedShippingMethod.method_code == 'postnl_pakjegemak' || window.checkoutConfig.selectedShippingMethod.method_code == 'dhl_parcelshop')){
+                    if(window.checkoutConfig.selectedShippingMethod && (window.checkoutConfig.selectedShippingMethod.method_code == 'postnl_pakjegemak' || window.checkoutConfig.selectedShippingMethod.method_code == 'dhl_parcelshop' || window.checkoutConfig.selectedShippingMethod.method_code == 'intrapost_parcelshop' )){
                         checkoutData.setShippingAddressFromData(window.checkoutConfig.billingAddressFromData);
                     }
 
@@ -222,6 +229,10 @@ define(
                         jQuery('#modal').show();
                         jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=DPD');
                     }
+                    if(shippingMethod.method_code == "intrapost_parcelshop"){
+                        jQuery('#modal').show();
+                        jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=Intrapost');
+                    }
                     return true;
                 },
 
@@ -239,7 +250,7 @@ define(
                 validateShippingInformation: function () {
                     var result;
                     if(quote.shippingMethod()){
-                      if (quote.shippingMethod().method_code == "postnl_pakjegemak" || quote.shippingMethod().method_code == "dhl_parcelshop" || quote.shippingMethod().method_code == "dpd_parcelshop" ) {
+                      if (quote.shippingMethod().method_code == "postnl_pakjegemak" || quote.shippingMethod().method_code == "dhl_parcelshop" || quote.shippingMethod().method_code == "dpd_parcelshop" || quote.shippingMethod().method_code == "intrapost_parcelshop" ) {
                           if (jQuery("#shipping_method\\:company").val() === "") {
                               this.errorValidationMessage('Selecteer een afhaallocatie of een andere verzendmethode');
                               return false;

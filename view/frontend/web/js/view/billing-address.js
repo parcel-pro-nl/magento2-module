@@ -116,7 +116,7 @@ define(
             },
 
             canUseShippingAddress: ko.computed(function () {
-                if(quote && quote.shippingMethod() && (quote.shippingMethod().method_code == 'postnl_pakjegemak' || quote.shippingMethod().method_code == 'dhl_parcelshop'|| quote.shippingMethod().method_code == 'dpd_parcelshop'))
+                if(quote && quote.shippingMethod() && (quote.shippingMethod().method_code == 'postnl_pakjegemak' || quote.shippingMethod().method_code == 'dhl_parcelshop'|| quote.shippingMethod().method_code == 'dpd_parcelshop' || quote.shippingMethod().method_code == 'intrapost_parcelshop'))
                     return false;
 
                 return !quote.isVirtual() && quote.shippingAddress() && quote.shippingAddress().canUseForBilling();
@@ -135,7 +135,7 @@ define(
              */
             useShippingAddress: function () {
                 if (this.isAddressSameAsShipping() ) {
-                    if(quote.shippingMethod().method_code != 'postnl_pakjegemak' && quote.shippingMethod().method_code != 'dhl_parcelshop' && quote.shippingMethod().method_code != 'dpd_parcelshop'){
+                    if(quote.shippingMethod().method_code != 'postnl_pakjegemak' && quote.shippingMethod().method_code != 'dhl_parcelshop' && quote.shippingMethod().method_code != 'dpd_parcelshop' && quote.shippingMethod().method_code != 'intrapost_parcelshop'){
                         selectBillingAddress(quote.billingAddress());
                         this.updateAddresses();
                         this.isAddressDetailsVisible(true);
