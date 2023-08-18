@@ -53,8 +53,9 @@ define(
         var popUp = null;
         var locatiekiezerHost = "https://login.parcelpro.nl";
         function ParcelProKiezerUrl() {
-            var postcode = null;
-            var street = null;
+            let postcode = null;
+            let street = null;
+            let country = 'NL';
 
             if(window.isCustomerLoggedIn) {
                 if (typeof checkoutData.getShippingAddressFromData() !== "undefined"
@@ -63,6 +64,7 @@ define(
                 ) {
                     postcode = checkoutData.getShippingAddressFromData().postcode;
                     street = checkoutData.getShippingAddressFromData().street;
+                    country = checkoutData.getShippingAddressFromData().country_id;
                 } else {
                     if(checkoutData.getSelectedShippingAddress() != null){
                         var parts = checkoutData.getSelectedShippingAddress().split('customer-address');
@@ -82,13 +84,7 @@ define(
                 street = jQuery('input[name^=street]').first().val();
             }
 
-            var url = locatiekiezerHost + "/plugin/afhaalpunt/parcelpro-kiezer.html";
-            url += "?";
-            url += "id=" + window.checkoutConfig.config.gebruikerID;
-            url += "&postcode=" + postcode;
-            url += "&adres=" + street
-            url += "&origin=" + window.location.protocol + "//" + window.location.hostname;
-            return url;
+            return `${locatiekiezerHost}/plugin/afhaalpunt/parcelpro-kiezer.php?id=${window.checkoutConfig.config.gebruikerID}&postcode=${postcode}&country=${country}&adres=${street}&software=magento&origin=${window.location.protocol}//${window.location.hostname}`;
         }
 
         function popup_close() {
