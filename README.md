@@ -1,15 +1,16 @@
-=== Parcel Pro ===
-Tags: Shipping, Verzending, Pakketten, PostNL, DHL, DPD, UPS, GLS, Multi Carrier, Shops United Parcel Pro, Parcelpro
-Requires at least: Magento 2.x
-Tested up to: 2.4.0
-Stable tag: 1.7.0
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+# Parcel Pro Magento2 Module
 
-== Description ==
+|                   |                                                                                                                |
+|-------------------|----------------------------------------------------------------------------------------------------------------|
+| Tags              | Shipping, Verzending, Pakketten, PostNL, DHL, DPD, UPS, GLS, Multi Carrier, Shops United Parcel Pro, Parcelpro |
+| Requires at least | Magento 2.x                                                                                                    |
+| Tested up to      | 2.4.0                                                                                                          |
+| License           | GPLv2 or later                                                                                                 |
+| License URI       | http://www.gnu.org/licenses/gpl-2.0.html                                                                       |
+
 Parcel Pro heeft een module ontwikkeld die geïnstalleerd kan worden in de backoffice van Magento. Hiermee kunt u heel gemakkelijk orders inladen in ons verzendsysteem. Dit zorgt ervoor dat het verzendproces efficiënter wordt en het helpt u bij het verwerken van meerdere orders en zendingen.
 
-De handleiding is te vinden op https://www.parcelpro.nl/koppelingen/magento
-Deze repository zal geplaatst moeten worden in uw app/code/Parcelpro/Shipment directory geplaatst moeten worden.
+De handleiding is te vinden op https://www.parcelpro.nl/koppelingen/magento.
+Deze repository zal geplaatst moeten worden in uw `app/code/Parcelpro/Shipment` directory.
 
-Bij vragen kunt u contact opnemen via https://www.parcelpro.nl/over-ons/
+Bij vragen kunt u contact opnemen via https://www.parcelpro.nl/over-ons.
