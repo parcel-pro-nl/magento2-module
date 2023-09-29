@@ -5,8 +5,8 @@
 | Tags              | Shipping, Verzending, Pakketten, PostNL, DHL, DPD, UPS, GLS, Multi Carrier, Shops United Parcel Pro, Parcelpro |
 | Requires at least | Magento 2.x                                                                                                    |
 | Tested up to      | 2.4.0                                                                                                          |
-| License           | GPLv2 or later                                                                                                 |
-| License URI       | http://www.gnu.org/licenses/gpl-2.0.html                                                                       |
+| License           | OSL-3.0                                                                                                        |
+| License URI       | https://opensource.org/license/osl-3-0-php                                                                     |
 
 Parcel Pro heeft een module ontwikkeld die geïnstalleerd kan worden in de backoffice van Magento. Hiermee kunt u heel gemakkelijk orders inladen in ons verzendsysteem. Dit zorgt ervoor dat het verzendproces efficiënter wordt en het helpt u bij het verwerken van meerdere orders en zendingen.
 
