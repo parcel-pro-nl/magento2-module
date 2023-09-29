@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.14.1 -
+
+TODO: Finalize
+
+- Support voor Magento 2.4.6
+
 ## 2.14.0 - 2023-03-22
 
 - isset() toegevoegd aan Controller/Adminhtml/Shipment/Index.php regel 154

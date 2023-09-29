@@ -4,7 +4,7 @@
 |-------------------|----------------------------------------------------------------------------------------------------------------|
 | Tags              | Shipping, Verzending, Pakketten, PostNL, DHL, DPD, UPS, GLS, Multi Carrier, Shops United Parcel Pro, Parcelpro |
 | Requires at least | Magento 2.x                                                                                                    |
-| Tested up to      | 2.4.0                                                                                                          |
+| Tested up to      | 2.4.6                                                                                                          |
 | License           | OSL-3.0                                                                                                        |
 | License URI       | https://opensource.org/license/osl-3-0-php                                                                     |
 
