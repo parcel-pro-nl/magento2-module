@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.15.0 - 2023-10-03
+## 2.16.0 - 2023-10-03
 
 ### New
 
@@ -9,6 +9,16 @@
 ### Fixes
 
 - Fix deprecated functionaliteit in `Plugin/PluginBefore.php`
+
+## 2.15.0 - 2023-08-18
+
+### New
+
+- Intrapost toegevoegd
+
+### Fixes
+
+- Parcel Pro kiezer update
 
 ## 2.14.0 - 2023-03-22
 
