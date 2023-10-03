@@ -1,10 +1,10 @@
 # Changelog
 
-## 2.15.0 - TODO
+## 2.15.0 - 2023-10-03
 
 ### New
 
-- Support voor Magento 2.4.6
+- Documenteer support voor Magento 2.4.6
 
 ### Fixes
 
