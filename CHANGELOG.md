@@ -1,10 +1,14 @@
 # Changelog
 
-## 2.14.1 -
+## 2.15.0 - TODO
 
-TODO: Finalize
+### New
 
 - Support voor Magento 2.4.6
+
+### Fixes
+
+- Fix deprecated functionaliteit in `Plugin/PluginBefore.php`
 
 ## 2.14.0 - 2023-03-22
 
