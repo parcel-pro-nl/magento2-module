@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.16.0 - 2023-10-03
+
+### New
+
+- Documenteer support voor Magento 2.4.6
+
+### Fixes
+
+- Fix deprecated functionaliteit in `Plugin/PluginBefore.php`
+
+## 2.15.0 - 2023-08-18
+
+### New
+
+- Intrapost toegevoegd
+
+### Fixes
+
+- Parcel Pro kiezer update
+
 ## 2.14.0 - 2023-03-22
 
 - isset() toegevoegd aan Controller/Adminhtml/Shipment/Index.php regel 154

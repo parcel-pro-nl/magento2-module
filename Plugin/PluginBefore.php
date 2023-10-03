@@ -15,11 +15,11 @@ class PluginBefore
       if (!$context instanceof \Magento\Sales\Block\Adminhtml\Order\View) {
           return [$context, $buttonList];
       }
-        $this->_request = $context->getRequest();
-        if($this->_request->getFullActionName() == 'sales_order_view'){
+        $request = $context->getRequest();
+        if($request->getFullActionName() == 'sales_order_view'){
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
-            $order_id = $this->_request->getParams()['order_id'];
+            $order_id = $request->getParams()['order_id'];
             $order = $objectManager->create('Magento\Sales\Model\Order')->load($order_id);
             $order_id = $order->getIncrementId();
             $collection = $objectManager->create('Parcelpro\Shipment\Model\Resource\Parcelpro\CollectionFactory');
