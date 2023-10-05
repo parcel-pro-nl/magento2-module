@@ -1,5 +1,4 @@
 <?php
-
 namespace Parcelpro\Shipment\Plugin;
 
 use Parcelpro\Shipment\Model\ParcelproFactory;
@@ -13,11 +12,11 @@ class PluginBefore
         \Magento\Framework\View\Element\AbstractBlock $context,
         \Magento\Backend\Block\Widget\Button\ButtonList $buttonList
     ) {
-        if (!$context instanceof \Magento\Sales\Block\Adminhtml\Order\View) {
-            return [$context, $buttonList];
-        }
+      if (!$context instanceof \Magento\Sales\Block\Adminhtml\Order\View) {
+          return [$context, $buttonList];
+      }
         $request = $context->getRequest();
-        if ($request->getFullActionName() == 'sales_order_view') {
+        if($request->getFullActionName() == 'sales_order_view'){
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
             $order_id = $request->getParams()['order_id'];
@@ -26,20 +25,19 @@ class PluginBefore
             $collection = $objectManager->create('Parcelpro\Shipment\Model\Resource\Parcelpro\CollectionFactory');
             $collection = $collection->create()->addFieldToFilter('order_id', $order_id)->addFieldToSelect('*')->load();
             $result = $collection->getData();
-            if ($result) {
-                $result = $result[count($result) - 1];
-            }
+            if($result)
+                $result = $result[count($result)-1];
 
             if ($result && !is_null($result["barcode"])) {
                 $buttonList->add(
                     'print_label',
-                    ['label' => __('Print label'), 'onclick' => 'setLocation(\'' . $context->getUrl("pp_shipment/shipment/printlabel") . '\')', 'class' => 'save'],
+                    ['label' => __('Print label'), 'onclick' => 'setLocation(\''.$context->getUrl("pp_shipment/shipment/printlabel").'\')', 'class' => 'save'],
                     -1
                 );
-            } else {
+            }else{
                 $buttonList->add(
                     'zendingAanmelden',
-                    ['label' => __('Zending aanmelden'), 'onclick' => 'setLocation(\'' . $context->getUrl("pp_shipment/shipment/index") . '\')', 'class' => 'reset'],
+                    ['label' => __('Zending aanmelden'), 'onclick' => 'setLocation(\''.$context->getUrl("pp_shipment/shipment/index").'\')', 'class' => 'reset'],
                     -1
                 );
             }

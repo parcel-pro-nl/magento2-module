@@ -40,33 +40,33 @@ define(
         return function (PlaceButton) {
             return PlaceButton.extend({
 
-                placeOrder: function () {
+              placeOrder: function () {
 
-                    var errorMessage = '';
+                var errorMessage = '';
 
-                    if (!quote.paymentMethod()) {
-                        errorMessage = $.mage.__('No payment method selected');
-                        alert({ content: errorMessage });
+                if (!quote.paymentMethod()) {
+                    errorMessage = $.mage.__('No payment method selected');
+                    alert({ content: errorMessage });
 
-                        return;
-                    }
-
-                    if (!quote.shippingMethod() && !quote.isVirtual()) {
-                        errorMessage = $.mage.__('No shipping method selected');
-                        alert({ content: errorMessage });
-
-                        return;
-                    }
-
-                    setShippingInformationAction().done(
-                        function () {
-                            startPlaceOrderAction();
-                        }
-                    );
-
-
-
+                    return;
                 }
+
+                if (!quote.shippingMethod() && !quote.isVirtual()) {
+                    errorMessage = $.mage.__('No shipping method selected');
+                    alert({ content: errorMessage });
+
+                    return;
+                }
+
+                setShippingInformationAction().done(
+                    function() {
+                        startPlaceOrderAction();
+                    }
+                );
+
+
+
+              }
 
             });
         }

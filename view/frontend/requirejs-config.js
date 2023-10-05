@@ -15,19 +15,19 @@ config = {
         }
     },
     config: {
-        mixins: {
-            "Magento_Checkout/js/view/billing-address": {
-                "Parcelpro_Shipment/js/view/billing-address-mixin": true
-            },
-            "Amasty_Checkout/js/action/set-shipping-information": {
-                "Parcelpro_Shipment/js/action/set-shipping-information-mixin" : true
-            },
-            "Magento_Checkout/js/view/shipping": {
-                "Parcelpro_Shipment/js/view/shipping-mixin" : true
-            },
-            "Amasty_Checkout/js/view/place-button": {
-                "Parcelpro_Shipment/js/view/place-button-mixin" : true
-            }
+      mixins: {
+        "Magento_Checkout/js/view/billing-address": {
+            "Parcelpro_Shipment/js/view/billing-address-mixin": true
+        },
+        "Amasty_Checkout/js/action/set-shipping-information": {
+          "Parcelpro_Shipment/js/action/set-shipping-information-mixin" : true
+        },
+        "Magento_Checkout/js/view/shipping": {
+          "Parcelpro_Shipment/js/view/shipping-mixin" : true
+        },
+        "Amasty_Checkout/js/view/place-button": {
+          "Parcelpro_Shipment/js/view/place-button-mixin" : true
         }
-    }
+      }
+  }
 };

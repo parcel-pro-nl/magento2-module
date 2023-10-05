@@ -1,5 +1,4 @@
 <?php
-
 namespace Parcelpro\Shipment\Model\Carrier;
 
 use Magento\Quote\Model\Quote\Address\RateRequest;
@@ -63,7 +62,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
             'dpd_b2c' => 'Afleveradres (woonadres)',
             'dpd_b2b' => 'Afleveradres (zakelijk)',
             'dpd_parcelshop' => 'Parcel Shop',
-            'intrapost_parcelshop' => 'Parcelshop',
+            'intrapost_parcelshop'=> 'Parcelshop',
             'custom_pricerule' => 'Pricerule'
         ];
     }
@@ -74,21 +73,11 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         $rate->setCarrier($this->_code);
 
         $matches = explode('_', $key);
-        if ($matches[0] === 'dhl') {
-            $rate->setCarrierTitle($this->getConfigData('dhl_title'));
-        }
-        if ($matches[0] === 'postnl') {
-            $rate->setCarrierTitle($this->getConfigData('postnl_title'));
-        }
-        if ($matches[0] === 'vsp') {
-            $rate->setCarrierTitle($this->getConfigData('vsp_title'));
-        }
-        if ($matches[0] === 'sameday') {
-            $rate->setCarrierTitle($this->getConfigData('sameday_title'));
-        }
-        if ($matches[0] === 'intrapost') {
-            $rate->setCarrierTitle($this->getConfigData('intrapost_title'));
-        }
+        if ($matches[0] === 'dhl') $rate->setCarrierTitle($this->getConfigData('dhl_title'));
+        if ($matches[0] === 'postnl') $rate->setCarrierTitle($this->getConfigData('postnl_title'));
+        if ($matches[0] === 'vsp') $rate->setCarrierTitle($this->getConfigData('vsp_title'));
+        if ($matches[0] === 'sameday') $rate->setCarrierTitle($this->getConfigData('sameday_title'));
+        if ($matches[0] === 'intrapost') $rate->setCarrierTitle($this->getConfigData('intrapost_title'));
 
         $rate->setMethod($key);
         $rate->setMethodTitle($value);
@@ -113,11 +102,13 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         $result = $this->_rateResultFactory->create();
         $am = $this->getAllowedMethods();
         foreach ($am as $key => $value) {
-            if ($this->getConfigData($key)) {
+            if ($this->getConfigData($key) ) {
+
                 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                 $state = $objectManager->get('\Magento\Framework\App\State');
                 $_pricIncl = $this->getConfigData('price_incl');
                 if ($state->getAreaCode() == \Magento\Framework\App\Area::AREA_ADMINHTML) {
+
                     $object = $objectManager->create('\Magento\Sales\Model\AdminOrder\Create');
                     $total = $object->getQuote()->getSubtotal();
                     $grandTotal = $object->getQuote()->getGrandTotal();
@@ -132,9 +123,8 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                         ->getQuote()->getGrandTotal();
                 }
 
-                if ($_pricIncl) {
+                if($_pricIncl)
                     $total = $grandTotal; // Verzendkosten berekenen op basis van bedrag incl. BTW
-                }
 
                 $countryId = $request->getDestCountryId();
                 $weight = $request->getPackageWeight();
@@ -143,15 +133,12 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                 $pricerules = $this->serialize->unserialize($this->getConfigData($key));
 
                 if (!empty($pricerules)) {
+
                     foreach ($pricerules as $pricerule) {
-                        if ($pricerule['country'] != $countryId) {
-                            continue;
-                        }
+                        if ($pricerule['country'] != $countryId) continue;
 
                         if (($weight >= (float)$pricerule['min_weight']) && ($weight <= (float)$pricerule['max_weight']) && ($total >= (float)$pricerule['min_total']) && ($total <= (float)$pricerule['max_total'])) {
-                            if (is_null($pricerule['btw_tarief'])) {
-                                $pricerule['btw_tarief'] = 0;
-                            }
+                            if(is_null($pricerule['btw_tarief'])) $pricerule['btw_tarief'] = 0;
                             $shippingPrice = ( (float)$pricerule['btw_tarief'] ? ( (float)$pricerule['price'] + ((float)$pricerule['price'] / 100 ) * (float)$pricerule['btw_tarief'] ) : (float)$pricerule['price'] );
                             break;
                         }
@@ -164,13 +151,13 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
                         if (strpos(strtolower($key), 'postnl') !== false) {
                             $method->setCarrierTitle('PostNL');
-                        } elseif (strpos(strtolower($key), 'dhl') !== false) {
+                        } else if (strpos(strtolower($key), 'dhl') !== false) {
                             $method->setCarrierTitle('DHL');
-                        } elseif (strpos(strtolower($key), 'vsp') !== false) {
+                        } else if (strpos(strtolower($key), 'vsp') !== false) {
                             $method->setCarrierTitle('Van Straaten Post');
-                        } elseif (strpos(strtolower($key), 'sameday') !== false) {
+                        } else if (strpos(strtolower($key), 'sameday') !== false) {
                             $method->setCarrierTitle('Sameday');
-                        } elseif (strpos(strtolower($key), 'intrapost') !== false) {
+                        } else if (strpos(strtolower($key), 'intrapost') !== false) {
                             $method->setCarrierTitle('Intrapost');
                         }
                         $method->setMethod($key);
@@ -184,14 +171,10 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                         $counter = 0;
                         $carrier = null;
                         foreach ($pricerules as $pricerule) {
-                            if ($pricerule['country'] != $countryId) {
-                                continue;
-                            }
+                            if ($pricerule['country'] != $countryId) continue;
 
                             if (($weight >= (float)$pricerule['min_weight']) && ($weight <= (float)$pricerule['max_weight']) && ($total >= (float)$pricerule['min_total']) && ($total <= (float)$pricerule['max_total'])) {
-                                if (is_null($pricerule['btw_tarief'])) {
-                                    $pricerule['btw_tarief'] = 0;
-                                }
+                                if(is_null($pricerule['btw_tarief'])) $pricerule['btw_tarief'] = 0;
                                 $shippingPrice = ( (float)$pricerule['btw_tarief'] ? ( (float)$pricerule['price'] + ((float)$pricerule['price'] / 100 ) * (float)$pricerule['btw_tarief'] ) : (float)$pricerule['price'] );
 
                                 if ($shippingPrice !== false) {
@@ -213,6 +196,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                         }
                     }
                 }
+
             }
         }
         return $result;

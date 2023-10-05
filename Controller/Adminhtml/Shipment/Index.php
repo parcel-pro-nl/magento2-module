@@ -1,18 +1,16 @@
 <?php
-
 namespace Parcelpro\Shipment\Controller\Adminhtml\Shipment;
 
 use Magento\Framework\Setup\Exception;
 use Parcelpro\Shipment\Model\ParcelproFactory;
-
 /**
  * Responsible for loading page content.
  *
  * This is a basic controller that only loads the corresponding layout file. It may duplicate other such
  * controllers, and thus it is considered tech debt. This code duplication will be resolved in future releases.
  */
-class Index extends \Magento\Backend\App\Action
-{
+class Index extends \Magento\Backend\App\Action{
+
     protected $pageFactory;
     protected $scopeConfig;
     protected $_modelParcelproFactory;
@@ -25,7 +23,7 @@ class Index extends \Magento\Backend\App\Action
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         ParcelproFactory $modelParcelproFactory,
         \Magento\Framework\Serialize\Serializer\Json $serialize
-    ) {
+    ){
         $this->pageFactory = $pageFactory;
         $this->scopeConfig = $scopeConfig;
         $this->_modelParcelproFactory = $modelParcelproFactory;
@@ -33,15 +31,12 @@ class Index extends \Magento\Backend\App\Action
         parent::__construct($context);
     }
 
-    public function execute()
-    {
+    public function execute() {
         $order_id = $this->getRequest()->getParam('order_id');
-        if (!$order_id) {
-            $order_id = $this->getRequest()->getParam('selected');
-        }
+        if(!$order_id) $order_id = $this->getRequest()->getParam('selected');
 
         $message = null;
-        if (is_null($order_id)) {
+        if(is_null($order_id)){
             $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
             $collectionFactory = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\CollectionFactory');
             $filter = $objectManager->create('Magento\Ui\Component\MassAction\Filter');
@@ -52,36 +47,29 @@ class Index extends \Magento\Backend\App\Action
             $collection = $filter->getCollection($collectionFactory->create());
 
             foreach ($collection->getItems() as $order) {
-                if (!in_array($order->getId(), $result)) {
-                    $message = $this->postToParcelPro($order->getId());
-                }
+                if (!in_array($order->getId(), $result)) $message = $this->postToParcelPro($order->getId());
             }
-        } else {
-            if ($order_id) {
-                if (is_array($order_id)) {
-                    foreach ($order_id as $k => $v) {
+        }else{
+            if($order_id){
+                if(is_array($order_id)){
+                    foreach($order_id as $k => $v) {
                         $message .= $this->postToParcelPro($v);
                         $message .= "<br>";
                     }
-                } else {
+                }else {
                     $message = $this->postToParcelPro($order_id);
                 }
             }
         }
 
-        if (!$message) {
-            $this->messageManager->addError(__('Er is een fout opgetreden, probeer opnieuw'));
-        }
-        if ($message) {
-            $this->messageManager->addNotice(__($message));
-        }
+        if(!$message) $this->messageManager->addError(__('Er is een fout opgetreden, probeer opnieuw'));
+        if($message) $this->messageManager->addNotice(__($message));
         $this->_redirect($this->_redirect->getRefererUrl());
     }
 
 
-    public function postToParcelPro($order_id)
-    {
-        try {
+    public function postToParcelPro($order_id) {
+        try{
             $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
             $order = $objectManager->create('Magento\Sales\Model\Order')->load($order_id);
             $order_id = $order->getIncrementId();
@@ -95,14 +83,14 @@ class Index extends \Magento\Backend\App\Action
 
             $shipping_method = $this->getShippingMethod($order->getShippingMethod(), $order);
 
-            if ($shipping_method) {
+            if($shipping_method){
                 $data["custom_shipping_method"] = $shipping_method;
             }
 
             $parts = explode('_', $data["shipping_method"]);
-            $parts[count($parts) - 1] = "title";
-            if ($parts) {
-                $shipping_title = str_replace('parcelpro_', '', implode('_', $parts));
+            $parts[count($parts)-1] = "title";
+            if($parts){
+                $shipping_title = str_replace('parcelpro_', '',implode('_',$parts));
             }
 
             $data['created_at'] = date('Y-m-d H:i:s');
@@ -110,14 +98,13 @@ class Index extends \Magento\Backend\App\Action
 
             $totalOrders = 0;
             $totalOrdersVirtual = 0;
-            foreach ($order->getAllItems() as $orderItem) {
+            foreach($order->getAllItems() as $orderItem){
                 $totalOrders++;
-                if ($orderItem->getProduct()->getIsVirtual()) {
+                if($orderItem->getProduct()->getIsVirtual())
                     $totalOrdersVirtual++;
-                }
             }
 
-            if ($totalOrders == $totalOrdersVirtual) {
+            if($totalOrders == $totalOrdersVirtual){
                 return true;
             }
 
@@ -147,9 +134,9 @@ class Index extends \Magento\Backend\App\Action
             ];
 
             $curl_options += [
-                CURLOPT_HEADER => false,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_HEADER => FALSE,
+                CURLOPT_RETURNTRANSFER => TRUE,
+                CURLOPT_SSL_VERIFYPEER => FALSE,
             ];
 
             $curl_handler = curl_init();
@@ -160,23 +147,20 @@ class Index extends \Magento\Backend\App\Action
             $response_code = curl_getinfo($curl_handler, CURLINFO_HTTP_CODE);
             curl_close($curl_handler);
 
-            $response_body = json_decode($response_body, true);
+            $response_body = json_decode($response_body, TRUE);
 
-            if ($response_code != 200) {
-                throw new \Magento\Framework\Exception\LocalizedException(__(sprintf("De zending is niet succesvol aangemeld bij ParcelPro foutcode: %s, melding: %s", $response_code, $response_body['omschrijving']), 10));
-            }
+            if ($response_code != 200) throw new \Magento\Framework\Exception\LocalizedException(__(sprintf("De zending is niet succesvol aangemeld bij ParcelPro foutcode: %s, melding: %s", $response_code, $response_body['omschrijving']), 10));
 
             if (isset($response_body['Barcode'])) {
                 $firstTwoCharOfBarcode = substr($response_body['Barcode'], 0, 2);
                 $carrier = false;
-                if (isset($shipping_title) && array_key_exists($shipping_title, $config)) {
+                if (isset($shipping_title) && array_key_exists($shipping_title, $config))
                     $carrier = $config[$shipping_title];
-                }
 
                 if (!$carrier) {
                     if ($firstTwoCharOfBarcode === "3S") {
                         $carrier = "PostNL via Parcel Pro";
-                    } elseif ($firstTwoCharOfBarcode === "JJ") {
+                    } else if ($firstTwoCharOfBarcode === "JJ") {
                         $carrier = "DHL via Parcel Pro";
                     } else {
                         $carrier = $response_body['Carrier'];
@@ -190,9 +174,7 @@ class Index extends \Magento\Backend\App\Action
                 $collection = $collection->create()->addFieldToFilter('order_id', $order_id)->getFirstItem();
 
                 $result = $collection->getData();
-                if ($result && isset($result['id'])) {
-                    $data['id'] = $result['id'];
-                }
+                if ($result && isset($result['id'])) $data['id'] = $result['id'];
 
                 $parcelproModel = $this->_modelParcelproFactory->create();
                 $parcelproModel->setData($data);
@@ -200,24 +182,25 @@ class Index extends \Magento\Backend\App\Action
 
                 return sprintf("Order %s succesvol aangemaakt", $order_id);
             }
-        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+        }catch(\Magento\Framework\Exception\LocalizedException $e){
             return sprintf("Order %s geeft een error", $order_id);
         }
+
     }
 
-    public function getShippingMethod($key, $order)
-    {
+    public function getShippingMethod($key, $order){
         if (strpos($key, 'custom_pricerule') !== false) {
+
             $pieces = explode("parcelpro_", $key);
             $pieces = explode("custom_pricerule_", $pieces[1]);
 
             $config = $this->scopeConfig->getValue('carriers/parcelpro', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $order->getStoreId());
             $pricerules = $this->serialize->unserialize($config["custom_pricerule"]);
 
-            if ($pricerules) {
+            if($pricerules){
                 $counter = 0;
-                foreach ($pricerules as $pricerule) {
-                    if ($counter == $pieces[1]) {
+                foreach($pricerules as $pricerule){
+                    if($counter == $pieces[1]){
                         return $pricerule;
                     }
                     $counter++;

@@ -8,13 +8,13 @@ define(
     [
         './shipping-save-processor/default'
     ],
-    function (defaultProcessor) {
+    function(defaultProcessor) {
         'use strict';
         var processors = [];
         processors['default'] =  defaultProcessor;
 
         return {
-            registerProcessor: function (type, processor) {
+            registerProcessor: function(type, processor) {
                 processors[type] = processor;
             },
             saveShippingInformation: function (type) {

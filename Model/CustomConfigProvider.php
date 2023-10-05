@@ -1,8 +1,8 @@
 <?php
-
 namespace Parcelpro\Shipment\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
+
 
 class CustomConfigProvider implements ConfigProviderInterface
 {
@@ -10,7 +10,7 @@ class CustomConfigProvider implements ConfigProviderInterface
 
     private function getScopeConfig()
     {
-        if ($this->scopeConfig === null) {
+        if ($this->scopeConfig === NULL) {
             $this->scopeConfig = \Magento\Framework\App\ObjectManager::getInstance()->get(
                 'Magento\Framework\App\Config\ScopeConfigInterface'
             );
@@ -35,4 +35,5 @@ class CustomConfigProvider implements ConfigProviderInterface
         ];
         return $config;
     }
+
 }
