@@ -225,6 +225,10 @@ define(
                         jQuery('#modal').show();
                         jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=DPD');
                     }
+                    if (shippingMethod.carrier_code == 'parcelpro' && shippingMethod.carrier_title == 'Homerr') {
+                        jQuery('#modal').show();
+                        jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=Homerr');
+                    }
                     if(shippingMethod.method_code == "intrapost_parcelshop"){
                         jQuery('#modal').show();
                         jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=Intrapost');
