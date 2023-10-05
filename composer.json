@@ -9,8 +9,8 @@
     "dhl"
   ],
   "type": "magento2-module",
-  "require":{
-    "php":">=7.1"
+  "require": {
+    "php": ">=7.1"
   },
   "license": [
     "OSL-3.0"
@@ -24,7 +24,9 @@
     }
   ],
   "autoload": {
-    "files": [ "registration.php" ],
+    "files": [
+      "registration.php"
+    ],
     "psr-4": {
       "Parcelpro\\Shipment\\": ""
     }
