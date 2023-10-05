@@ -2,7 +2,6 @@
 
 namespace Parcelpro\Shipment\Block\Adminhtml\Order\View\Tab;
 
-
 class Custom extends \Magento\Backend\Block\Template implements \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
@@ -135,18 +134,20 @@ class Custom extends \Magento\Backend\Block\Template implements \Magento\Backend
         return $this->getUrl('pp_shipment/order/customTab', ['_current' => true]);
     }
 
-    public function getSaveUrl(){
+    public function getSaveUrl()
+    {
         return $this->getUrl('pp_shipment/order/updateOrder', ['_current' => true]);
     }
 
-    public function currentValues(){
+    public function currentValues()
+    {
         $orderId = $this->getRequest()->getParam('order_id');
         $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
         $order = $objectManager->create('Magento\Sales\Model\Order')->load($orderId);
 
         $data = array();
         $data["order_id"] = $orderId;
-        if($order->getShippingMethod()){
+        if ($order->getShippingMethod()) {
             $data["custom_shipping_method"] = str_replace("parcelpro_", "", $order->getShippingMethod());
         }
 
@@ -156,7 +157,7 @@ class Custom extends \Magento\Backend\Block\Template implements \Magento\Backend
 
         $data["aantal_pakketten"] = 1;
         $data["reeds_aangemeld"] = false;
-        if($result){
+        if ($result) {
             $data["aantal_pakketten"] = $result["aantal_pakketten"];
             $data["reeds_aangemeld"] = true;
         }
@@ -164,28 +165,34 @@ class Custom extends \Magento\Backend\Block\Template implements \Magento\Backend
         return $data;
     }
 
-    public function shippingOptions(){
+    public function shippingOptions()
+    {
         $store = $this->_storeManager->getStore()->getId();
         $carriers = [];
 
-        foreach($this->_parcelpro->getAllowedMethods() as $k => $v){
-            if(!$this->_parcelpro->getConfigData($k) || $this->_parcelpro->getConfigData($k) == "[]")continue;
+        foreach ($this->_parcelpro->getAllowedMethods() as $k => $v) {
+            if (!$this->_parcelpro->getConfigData($k) || $this->_parcelpro->getConfigData($k) == "[]") {
+                continue;
+            }
             $parts = explode("_", $k);
-            if(strtolower($v) == 'pricerule') $v = 'Buitenland';
+            if (strtolower($v) == 'pricerule') {
+                $v = 'Buitenland';
+            }
 
-            $carriers[$k] = ucfirst($parts[0]). ' ' .$v;
+            $carriers[$k] = ucfirst($parts[0]) . ' ' . $v;
         }
 
         $pricerules = $this->_scopeConfig->getValue(
             'carriers/parcelpro/custom_pricerule',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $store);
+            $store
+        );
         // Custom rules
-        if($pricerules){
+        if ($pricerules) {
             $counter = 0;
             $pricerules = $this->serialize->unserialize($pricerules);
             foreach ($pricerules as $pricerule) {
-                $carriers["custom_pricerule_".$counter] = $pricerule["titel"];
+                $carriers["custom_pricerule_" . $counter] = $pricerule["titel"];
                 $counter++;
             }
             unset($carriers["custom_pricerule"]);
