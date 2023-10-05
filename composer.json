@@ -41,6 +41,7 @@
     }
   },
   "scripts": {
-    "cs:check": "phpcs"
+    "cs:check": "phpcs",
+    "cs:fix": "phpcbf"
   }
 }
