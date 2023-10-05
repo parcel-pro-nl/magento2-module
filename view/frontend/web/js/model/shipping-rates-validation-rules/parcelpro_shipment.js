@@ -8,7 +8,7 @@ define(
     function () {
         "use strict";
         return {
-            getRules: function() {
+            getRules: function () {
                 return {
                     'country_id': {
                         'required': true

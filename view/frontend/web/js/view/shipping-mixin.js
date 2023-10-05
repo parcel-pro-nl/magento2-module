@@ -52,12 +52,13 @@ define(
 
         var popUp = null;
         var locatiekiezerHost = "https://login.parcelpro.nl";
-        function ParcelProKiezerUrl() {
+        function ParcelProKiezerUrl()
+        {
             let postcode = null;
             let street = null;
             let country = 'NL';
 
-            if(window.isCustomerLoggedIn) {
+            if (window.isCustomerLoggedIn) {
                 if (typeof checkoutData.getShippingAddressFromData() !== "undefined"
                     && checkoutData.getShippingAddressFromData() !== null
                     && checkoutData.getSelectedShippingAddress() == 'new-customer-address'
@@ -66,36 +67,39 @@ define(
                     street = checkoutData.getShippingAddressFromData().street;
                     country = checkoutData.getShippingAddressFromData().country_id;
                 } else {
-                    if(checkoutData.getSelectedShippingAddress() != null){
+                    if (checkoutData.getSelectedShippingAddress() != null) {
                         var parts = checkoutData.getSelectedShippingAddress().split('customer-address');
-                        postcode = window.customerData.addresses[ ( parts[1] -1 ) ].postcode;
-                        street = window.customerData.addresses[ ( parts[1] -1 ) ].street[0];
-                    }else{
-                        if(window.customerData.addresses.length >=1 ){
+                        postcode = window.customerData.addresses[ ( parts[1] - 1 ) ].postcode;
+                        street = window.customerData.addresses[ ( parts[1] - 1 ) ].street[0];
+                    } else {
+                        if (window.customerData.addresses.length >= 1 ) {
                             postcode = window.customerData.addresses[0].postcode;
                             street = window.customerData.addresses[0].street[0];
-                        }else{
+                        } else {
                             postcode = (jQuery('input[name=postcode]').val() != '' ? jQuery('input[name=postcode]').val() : '');
                         }
                     }
                 }
-            }else{
+            } else {
                 postcode = jQuery('input[name=postcode]').val();
                 street = jQuery('input[name^=street]').first().val();
             }
 
-            return `${locatiekiezerHost}/plugin/afhaalpunt/parcelpro-kiezer.php?id=${window.checkoutConfig.config.gebruikerID}&postcode=${postcode}&country=${country}&adres=${street}&software=magento&origin=${window.location.protocol}//${window.location.hostname}`;
+            return `${locatiekiezerHost} / plugin / afhaalpunt / parcelpro - kiezer.php ? id = ${window.checkoutConfig.config.gebruikerID} & postcode = ${postcode} & country = ${country} & adres = ${street} & software = magento & origin = ${window.location.protocol}//${window.location.hostname}`;
         }
 
-        function popup_close() {
+        function popup_close()
+        {
             jQuery('#modal').hide();
         }
 
-        function popup_submit(data) {
+        function popup_submit(data)
+        {
             AddressIsParcelshop(data);
         }
 
-        function AddressIsParcelshop(data) {
+        function AddressIsParcelshop(data)
+        {
             if (data) {
                 jQuery("#shipping_method\\:company").val(data.Id);
                 jQuery("#shipping_method\\:firstname").val(data.LocationType);
@@ -135,7 +139,7 @@ define(
             if (firstname == "Intrapost Parcelshop") {
                 var label = jQuery('label[for="s_method_parcelpro_intrapost_parcelshop"]');
                 var price = jQuery('span', label);
-                var priceHtml =jQuery('<div>').append(price.clone()).html();
+                var priceHtml = jQuery('<div>').append(price.clone()).html();
                 jQuery(label).html(firstname + " " + lastname + " <strong>" + priceHtml + "<strong>");
                 return true;
             }
@@ -165,7 +169,7 @@ define(
                         }
                     });
 
-                    if(window.checkoutConfig.selectedShippingMethod && (window.checkoutConfig.selectedShippingMethod.method_code == 'postnl_pakjegemak' || window.checkoutConfig.selectedShippingMethod.method_code == 'dhl_parcelshop' || window.checkoutConfig.selectedShippingMethod.method_code == 'intrapost_parcelshop' )){
+                    if (window.checkoutConfig.selectedShippingMethod && (window.checkoutConfig.selectedShippingMethod.method_code == 'postnl_pakjegemak' || window.checkoutConfig.selectedShippingMethod.method_code == 'dhl_parcelshop' || window.checkoutConfig.selectedShippingMethod.method_code == 'intrapost_parcelshop' )) {
                         checkoutData.setShippingAddressFromData(window.checkoutConfig.billingAddressFromData);
                     }
 
@@ -186,60 +190,61 @@ define(
 
                 isSelected: ko.computed(function () {
                         // Parcel Pro Afhaalpunt
-                        if($('#modal').is(':visible')) return false;
+                    if ($('#modal').is(':visible')) {
+                        return false;
+                    }
                         var postcode = null;
                         var street = null;
 
-                        if(customer.isLoggedIn()){
-                            if (typeof checkoutData.getShippingAddressFromData() !== "undefined"
-                                && checkoutData.getShippingAddressFromData() !== null) {
-                                postcode = checkoutData.getShippingAddressFromData().postcode;
-                                street = checkoutData.getShippingAddressFromData().street;
-                            } else if(customer.isLoggedIn()) {
-                                if(customer.customerData.addresses.length >= 1 ){
-                                    postcode = customer.customerData.addresses[0].postcode;
-                                    street = customer.customerData.addresses[0].street[0];
-                                }
+                    if (customer.isLoggedIn()) {
+                        if (typeof checkoutData.getShippingAddressFromData() !== "undefined"
+                            && checkoutData.getShippingAddressFromData() !== null) {
+                            postcode = checkoutData.getShippingAddressFromData().postcode;
+                            street = checkoutData.getShippingAddressFromData().street;
+                        } else if (customer.isLoggedIn()) {
+                            if (customer.customerData.addresses.length >= 1 ) {
+                                postcode = customer.customerData.addresses[0].postcode;
+                                street = customer.customerData.addresses[0].street[0];
                             }
                         }
+                    }
 
                         return quote.shippingMethod()
                             ? quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code
                             : null;
-                    }
-                ),
+                }),
 
 
-                selectShippingMethod: function(shippingMethod) {
-                    selectShippingMethodAction(shippingMethod);
-                    checkoutData.setSelectedShippingRate(shippingMethod.carrier_code + '_' + shippingMethod.method_code);
-                    if(shippingMethod.method_code =="postnl_pakjegemak"){
-                        jQuery('#modal').show();
-                        jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=PostNL');
-                    }
-                    if(shippingMethod.method_code =="dhl_parcelshop"){
-                        jQuery('#modal').show();
-                        jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=DHL');
-                    }
-                    if(shippingMethod.method_code =="dpd_parcelshop"){
-                        jQuery('#modal').show();
-                        jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=DPD');
-                    }
-                    if (shippingMethod.carrier_code == 'parcelpro' && shippingMethod.carrier_title == 'Homerr') {
-                        jQuery('#modal').show();
-                        jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=Homerr');
-                    }
-                    if(shippingMethod.method_code == "intrapost_parcelshop"){
-                        jQuery('#modal').show();
-                        jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=Intrapost');
-                    }
-                    return true;
-                },
+            selectShippingMethod: function (shippingMethod) {
+                selectShippingMethodAction(shippingMethod);
+                checkoutData.setSelectedShippingRate(shippingMethod.carrier_code + '_' + shippingMethod.method_code);
+                if (shippingMethod.method_code == "postnl_pakjegemak") {
+                    jQuery('#modal').show();
+                    jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=PostNL');
+                }
+                if (shippingMethod.method_code == "dhl_parcelshop") {
+                    jQuery('#modal').show();
+                    jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=DHL');
+                }
+                if (shippingMethod.method_code == "dpd_parcelshop") {
+                    jQuery('#modal').show();
+                    jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=DPD');
+                }
+                if (shippingMethod.carrier_code == 'parcelpro' && shippingMethod.carrier_title == 'Homerr') {
+                    jQuery('#modal').show();
+                    jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=Homerr');
+                }
+                if (shippingMethod.method_code == "intrapost_parcelshop") {
+                    jQuery('#modal').show();
+                    jQuery('#afhaalpunt_frame').attr('src', ParcelProKiezerUrl() + '&carrier=Intrapost');
+                }
+                return true;
+            },
 
                 setShippingInformation: function () {
                     if (this.validateShippingInformation()) {
                         setShippingInformationAction().done(
-                            function() {
+                            function () {
                                 stepNavigator.next();
                             }
                         );
@@ -249,13 +254,13 @@ define(
 
                 validateShippingInformation: function () {
                     var result;
-                    if(quote.shippingMethod()){
-                      if (quote.shippingMethod().method_code == "postnl_pakjegemak" || quote.shippingMethod().method_code == "dhl_parcelshop" || quote.shippingMethod().method_code == "dpd_parcelshop" || quote.shippingMethod().method_code == "intrapost_parcelshop" ) {
-                          if (jQuery("#shipping_method\\:company").val() === "") {
-                              this.errorValidationMessage('Selecteer een afhaallocatie of een andere verzendmethode');
-                              return false;
-                          }
-                      }
+                    if (quote.shippingMethod()) {
+                        if (quote.shippingMethod().method_code == "postnl_pakjegemak" || quote.shippingMethod().method_code == "dhl_parcelshop" || quote.shippingMethod().method_code == "dpd_parcelshop" || quote.shippingMethod().method_code == "intrapost_parcelshop" ) {
+                            if (jQuery("#shipping_method\\:company").val() === "") {
+                                this.errorValidationMessage('Selecteer een afhaallocatie of een andere verzendmethode');
+                                return false;
+                            }
+                        }
                     }
 
                     return this._super();

@@ -16,11 +16,11 @@ define([
              * Get new address label
              * @returns {String}
              */
-            getAddressInline: function () {
-                return $t('New Address');
-            },
-            customerAddressId: null
+        getAddressInline: function () {
+            return $t('New Address');
         },
+        customerAddressId: null
+    },
         addressOptions = addressList().filter(function (address) {
             return address.getType() === 'customer-address';
         });

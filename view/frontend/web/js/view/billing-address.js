@@ -49,7 +49,7 @@ define(
                     return $t('New Address');
                 },
                 customerAddressId: null
-            },
+        },
             countryData = customerData.get('directory-data'),
             addressOptions = addressList().filter(function (address) {
                 return address.getType() == 'customer-address';
@@ -116,8 +116,9 @@ define(
             },
 
             canUseShippingAddress: ko.computed(function () {
-                if(quote && quote.shippingMethod() && (quote.shippingMethod().method_code == 'postnl_pakjegemak' || quote.shippingMethod().method_code == 'dhl_parcelshop'|| quote.shippingMethod().method_code == 'dpd_parcelshop' || quote.shippingMethod().method_code == 'intrapost_parcelshop'))
+                if (quote && quote.shippingMethod() && (quote.shippingMethod().method_code == 'postnl_pakjegemak' || quote.shippingMethod().method_code == 'dhl_parcelshop' || quote.shippingMethod().method_code == 'dpd_parcelshop' || quote.shippingMethod().method_code == 'intrapost_parcelshop')) {
                     return false;
+                }
 
                 return !quote.isVirtual() && quote.shippingAddress() && quote.shippingAddress().canUseForBilling();
             }),
@@ -126,16 +127,16 @@ define(
              * @param {Object} address
              * @return {*}
              */
-            addressOptionsText: function (address) {
-                return address.getAddressInline();
-            },
+        addressOptionsText: function (address) {
+            return address.getAddressInline();
+        },
 
             /**
              * @return {Boolean}
              */
             useShippingAddress: function () {
                 if (this.isAddressSameAsShipping() ) {
-                    if(quote.shippingMethod().method_code != 'postnl_pakjegemak' && quote.shippingMethod().method_code != 'dhl_parcelshop' && quote.shippingMethod().method_code != 'dpd_parcelshop' && quote.shippingMethod().method_code != 'intrapost_parcelshop'){
+                    if (quote.shippingMethod().method_code != 'postnl_pakjegemak' && quote.shippingMethod().method_code != 'dhl_parcelshop' && quote.shippingMethod().method_code != 'dpd_parcelshop' && quote.shippingMethod().method_code != 'intrapost_parcelshop') {
                         selectBillingAddress(quote.billingAddress());
                         this.updateAddresses();
                         this.isAddressDetailsVisible(true);
@@ -226,11 +227,11 @@ define(
             /**
              * Restore billing address
              */
-            restoreBillingAddress: function () {
-                if (lastSelectedBillingAddress != null) {
-                    selectBillingAddress(lastSelectedBillingAddress);
-                }
-            },
+        restoreBillingAddress: function () {
+            if (lastSelectedBillingAddress != null) {
+                selectBillingAddress(lastSelectedBillingAddress);
+            }
+        },
 
             /**
              * @param {Object} address
