@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.17.0 - 2023-10-05
+
+### New
+
+- Parcelshops voor Homerr toegevoegd
+
 ## 2.16.0 - 2023-10-03
 
 ### New
