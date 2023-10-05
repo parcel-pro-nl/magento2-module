@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- See: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset -->
+<ruleset name="Parcel Pro Standard" namespace="Parcelpro\CS\Standard">
+    <description>The Parcel Pro code style standard.</description>
+
+    <file>.</file>
+    <exclude-pattern>./vendor</exclude-pattern>
+
+    <rule ref="PSR2"/>
+</ruleset>
