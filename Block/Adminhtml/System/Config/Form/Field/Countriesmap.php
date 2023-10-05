@@ -1,4 +1,5 @@
 <?php
+
 namespace Parcelpro\Shipment\Block\Adminhtml\System\Config\Form\Field;
 
 class Countriesmap extends \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray
@@ -25,8 +26,7 @@ class Countriesmap extends \Magento\Config\Block\System\Config\Form\Field\FieldA
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Data\Form\Element\Factory $elementFactory,
         array $data = []
-    )
-    {
+    ) {
         $this->_elementFactory = $elementFactory;
         parent::__construct($context, $data);
     }

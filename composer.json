@@ -9,8 +9,8 @@
     "dhl"
   ],
   "type": "magento2-module",
-  "require":{
-    "php":">=7.1"
+  "require": {
+    "php": ">=7.1"
   },
   "license": [
     "OSL-3.0"
@@ -24,9 +24,26 @@
     }
   ],
   "autoload": {
-    "files": [ "registration.php" ],
+    "files": [
+      "registration.php"
+    ],
     "psr-4": {
       "Parcelpro\\Shipment\\": ""
     }
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.7",
+    "magento/community-edition": "^2.4"
+  },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": false,
+      "magento/magento-composer-installer": false,
+      "magento/composer-dependency-version-audit-plugin": false
+    }
+  },
+  "scripts": {
+    "cs:check": "phpcs",
+    "cs:fix": "phpcbf"
   }
 }

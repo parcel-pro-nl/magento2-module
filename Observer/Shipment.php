@@ -1,11 +1,12 @@
 <?php
+
 namespace Parcelpro\Shipment\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Parcelpro\Shipment\Model\ParcelproFactory;
 
-class Shipment implements ObserverInterface {
-
+class Shipment implements ObserverInterface
+{
     /** @var \Magento\Framework\Logger\Monolog */
     protected $logger;
     protected $scopeConfig;
@@ -25,12 +26,13 @@ class Shipment implements ObserverInterface {
         $this->serialize = $serialize;
     }
 
-    public function execute( \Magento\Framework\Event\Observer $observer ) {
-        try{
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
+        try {
             $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
 
             $order = $observer->getEvent()->getOrder();
-            if(!$order){
+            if (!$order) {
                 $shipment = $observer->getEvent()->getShipment();
                 $order = $shipment->getOrder();
                 $order->getState();
@@ -39,15 +41,16 @@ class Shipment implements ObserverInterface {
             $config = $this->scopeConfig->getValue('carriers/parcelpro', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $order->getStoreId());
 
             if ($config["auto"]) {
-
                 $collection = $objectManager->create('Parcelpro\Shipment\Model\Resource\Parcelpro\CollectionFactory');
                 $collection = $collection->create()->addFieldToFilter('order_id', $order->getIncrementId())->getFirstItem();
                 $pp_result = $collection->getData();
 
                 // Controleren of de zending al is aangemeld en de auto aanmelden functie aanstaat.
                 if (!$pp_result && $order) {
-                    if(strtolower($config["auto_status"]) == 'pending') $config["auto_status"] = 'new';
-                    if( strtolower($order->getState()) == strtolower($config["auto_status"]) ) {
+                    if (strtolower($config["auto_status"]) == 'pending') {
+                        $config["auto_status"] = 'new';
+                    }
+                    if (strtolower($order->getState()) == strtolower($config["auto_status"])) {
                         $order_id = $order->getIncrementId();
                         $data = $order->getData();
 
@@ -57,20 +60,21 @@ class Shipment implements ObserverInterface {
                         }
 
                         $parts = explode('_', $data["shipping_method"]);
-                        if($parts){
-                            $parts[count($parts)-1] = "title";
-                            $shipping_title = str_replace('parcelpro_', '',implode('_',$parts));
+                        if ($parts) {
+                            $parts[count($parts) - 1] = "title";
+                            $shipping_title = str_replace('parcelpro_', '', implode('_', $parts));
                         }
 
                         $totalOrders = 0;
                         $totalOrdersVirtual = 0;
-                        foreach($order->getAllItems() as $orderItem){
+                        foreach ($order->getAllItems() as $orderItem) {
                             $totalOrders++;
-                            if($orderItem->getProduct()->getIsVirtual())
+                            if ($orderItem->getProduct()->getIsVirtual()) {
                                 $totalOrdersVirtual++;
+                            }
                         }
 
-                        if($totalOrders == $totalOrdersVirtual){
+                        if ($totalOrders == $totalOrdersVirtual) {
                             $this->messageManager->addError(__('De zending niet succesvol bij ParcelPro omdat de producten virtueel zijn.'));
                             return;
                         }
@@ -102,9 +106,9 @@ class Shipment implements ObserverInterface {
                         ];
 
                         $curl_options += [
-                            CURLOPT_HEADER => FALSE,
-                            CURLOPT_RETURNTRANSFER => TRUE,
-                            CURLOPT_SSL_VERIFYPEER => FALSE,
+                            CURLOPT_HEADER => false,
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_SSL_VERIFYPEER => false,
                         ];
 
                         $curl_handler = curl_init();
@@ -116,20 +120,23 @@ class Shipment implements ObserverInterface {
 
                         curl_close($curl_handler);
 
-                        $response_body = json_decode($response_body, TRUE);
+                        $response_body = json_decode($response_body, true);
 
-                        if ($response_code != 200) throw new \Magento\Framework\Exception\LocalizedException(__(sprintf("De zending is niet succesvol aangemeld bij ParcelPro foutcode: %s, melding: %s", $response_code, $response_body['omschrijving']), 10));
+                        if ($response_code != 200) {
+                            throw new \Magento\Framework\Exception\LocalizedException(__(sprintf("De zending is niet succesvol aangemeld bij ParcelPro foutcode: %s, melding: %s", $response_code, $response_body['omschrijving']), 10));
+                        }
 
                         if (isset($response_body['Barcode'])) {
                             $firstTwoCharOfBarcode = substr($response_body['Barcode'], 0, 2);
                             $carrier = false;
-                            if (isset($shipping_title) && array_key_exists($shipping_title, $config))
+                            if (isset($shipping_title) && array_key_exists($shipping_title, $config)) {
                                 $carrier = $config[$shipping_title];
+                            }
 
                             if (!$carrier) {
                                 if ($firstTwoCharOfBarcode === "3S") {
                                     $carrier = "PostNL via Parcel Pro";
-                                } else if ($firstTwoCharOfBarcode === "JJ") {
+                                } elseif ($firstTwoCharOfBarcode === "JJ") {
                                     $carrier = "DHL via Parcel Pro";
                                 } else {
                                     $carrier = $response_body['Carrier'];
@@ -145,24 +152,24 @@ class Shipment implements ObserverInterface {
                     }
                 }
             }
-        }catch(\Magento\Framework\Exception\LocalizedException $e){
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->logger->debug($e);
         }
     }
 
-    public function getShippingMethod($key, $order){
+    public function getShippingMethod($key, $order)
+    {
         if (strpos($key, 'custom_pricerule') !== false) {
-
             $pieces = explode("parcelpro_", $key);
             $pieces = explode("custom_pricerule_", $pieces[1]);
 
             $config = $this->scopeConfig->getValue('carriers/parcelpro', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $order->getStoreId());
             $pricerules = $this->serialize->unserialize($config["custom_pricerule"]);
 
-            if($pricerules){
+            if ($pricerules) {
                 $counter = 0;
-                foreach($pricerules as $pricerule){
-                    if($counter == $pieces[1]){
+                foreach ($pricerules as $pricerule) {
+                    if ($counter == $pieces[1]) {
                         return $pricerule;
                     }
                     $counter++;

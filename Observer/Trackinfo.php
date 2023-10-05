@@ -1,11 +1,12 @@
 <?php
+
 namespace Parcelpro\Shipment\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Parcelpro\Shipment\Model\ParcelproFactory;
 
-class Trackinfo implements ObserverInterface {
-
+class Trackinfo implements ObserverInterface
+{
     /** @var \Magento\Framework\Logger\Monolog */
     protected $logger;
     protected $scopeConfig;
@@ -21,7 +22,8 @@ class Trackinfo implements ObserverInterface {
         $this->_modelParcelproFactory = $modelParcelproFactory;
     }
 
-    public function execute( \Magento\Framework\Event\Observer $observer ) {
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
         $shipment = $observer->getEvent()->getShipment();
@@ -34,7 +36,7 @@ class Trackinfo implements ObserverInterface {
 
         $result = $collection->getData();
 
-        if($result && !is_null($result['barcode'])){
+        if ($result && !is_null($result['barcode'])) {
             $shipment->setZendingId($result['zending_id']);
 
             $track = $objectManager->create('Magento\Sales\Model\Order\Shipment\Track');
