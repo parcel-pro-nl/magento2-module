@@ -10,7 +10,9 @@
   ],
   "type": "magento2-module",
   "require": {
-    "php": ">=7.1"
+    "php": ">=7.1",
+    "ext-json": "*",
+    "ext-curl": "*"
   },
   "license": [
     "OSL-3.0"
