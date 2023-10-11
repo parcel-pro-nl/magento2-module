@@ -10,6 +10,8 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 {
     protected $_code = 'parcelpro';
 
+    private $apiUrl = 'https://login.parcelpro.nl';
+
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory,
@@ -162,7 +164,10 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                     '2023-10-11', // TODO
                                     $checkoutSession->getQuote()->getShippingAddress()->getPostcode()
                                 );
-                                $method->setCarrierTitle('PostNL (' . $deliveryDate . ')');
+
+                                if ($deliveryDate) {
+                                    $method->setCarrierTitle('PostNL (' . $deliveryDate . ')');
+                                }
                             }
                         } elseif (strpos(strtolower($key), 'dhl') !== false) {
                             $method->setCarrierTitle('DHL');
@@ -261,7 +266,38 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         $userId = $this->getConfigData('gebruiker_id');
         $apiKey = $this->getConfigData('api_key');
 
-        // TODO
-        return 'todo';
+        $query = http_build_query([
+            'Boekingsdatum' => $date,
+            'Postcode' => $postcode,
+            'GebruikerId' => $userId,
+        ]);
+
+        $curlHandle = curl_init();
+        curl_setopt_array($curlHandle, [
+            CURLOPT_URL => $this->apiUrl . '/api/v3/delivery_date.php?' . $query,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Digest: ' . hash_hmac(
+                    "sha256",
+                    sprintf('Boekingsdatum=%s&GebruikerId=%sPostcode=%s', $date, $userId, $postcode),
+                    $apiKey
+                ),
+            ],
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HEADER => false,
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+
+        $responseBody = curl_exec($curlHandle);
+        $responseCode = curl_getinfo($curlHandle, CURLINFO_RESPONSE_CODE);
+
+        curl_close($curlHandle);
+
+        if ($responseCode !== 200) {
+            return false;
+        }
+
+        $responseJson = json_decode($responseBody, true);
+        return $responseJson['PostNL']['DeliveryDate'] ?? false;
     }
 }
