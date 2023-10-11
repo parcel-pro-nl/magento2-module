@@ -143,7 +143,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                             if (is_null($pricerule['btw_tarief'])) {
                                 $pricerule['btw_tarief'] = 0;
                             }
-                            $shippingPrice = ( (float)$pricerule['btw_tarief'] ? ( (float)$pricerule['price'] + ((float)$pricerule['price'] / 100 ) * (float)$pricerule['btw_tarief'] ) : (float)$pricerule['price'] );
+                            $shippingPrice = ((float)$pricerule['btw_tarief'] ? ((float)$pricerule['price'] + ((float)$pricerule['price'] / 100) * (float)$pricerule['btw_tarief']) : (float)$pricerule['price']);
                             break;
                         }
                     }
@@ -197,7 +197,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                 if (is_null($pricerule['btw_tarief'])) {
                                     $pricerule['btw_tarief'] = 0;
                                 }
-                                $shippingPrice = ( (float)$pricerule['btw_tarief'] ? ( (float)$pricerule['price'] + ((float)$pricerule['price'] / 100 ) * (float)$pricerule['btw_tarief'] ) : (float)$pricerule['price'] );
+                                $shippingPrice = ((float)$pricerule['btw_tarief'] ? ((float)$pricerule['price'] + ((float)$pricerule['price'] / 100) * (float)$pricerule['btw_tarief']) : (float)$pricerule['price']);
 
                                 if ($shippingPrice !== false) {
                                     $method = $this->_rateMethodFactory->create();
