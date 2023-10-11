@@ -62,6 +62,10 @@
                 <field id="postnl_title" translate="label comment tooltip" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>PostNL versturen via parcelpro.nl</label>
                 </field>
+                <field id="postnl_show_expected_delivery_date" translate="label" type="select" sortOrder="201" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Geef verwachte bezorgdatum weer</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <field id="postnl_afleveradres" translate="label comment tooltip" sortOrder="210" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>PostNL Afleveradres</label>
                     <frontend_model>Parcelpro\Shipment\Block\Adminhtml\System\Config\Form\Field\Countriesmap</frontend_model>
