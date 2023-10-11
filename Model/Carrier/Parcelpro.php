@@ -160,8 +160,11 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                 /** @var \Magento\Checkout\Model\Session $checkoutSession */
                                 $checkoutSession = $objectManager->create('\Magento\Checkout\Model\Session');
 
+                                // TODO: Add and check option for last possible time.
+                                $today = date('Y-m-d');
+
                                 $deliveryDate = $this->getPostnlDeliveryDate(
-                                    '2023-10-11', // TODO
+                                    $today,
                                     $checkoutSession->getQuote()->getShippingAddress()->getPostcode()
                                 );
 
@@ -299,5 +302,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
         $responseJson = json_decode($responseBody, true);
         return $responseJson['PostNL']['DeliveryDate'] ?? false;
+
+        // TODO: Format date.
     }
 }
