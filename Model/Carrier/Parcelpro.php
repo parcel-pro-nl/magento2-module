@@ -164,6 +164,11 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
                         if (strpos(strtolower($key), 'postnl') !== false) {
                             $method->setCarrierTitle('PostNL');
+
+                            if ($this->getConfigData('postnl_show_expected_delivery_date')) {
+                                // TODO: Get the expected delivery date.
+                                $method->setCarrierTitle('PostNL (datum)');
+                            }
                         } elseif (strpos(strtolower($key), 'dhl') !== false) {
                             $method->setCarrierTitle('DHL');
                         } elseif (strpos(strtolower($key), 'vsp') !== false) {
