@@ -1,6 +1,7 @@
 {
   "name": "parcelpro/shipment",
   "description": "Verzendmodule om gemakkelijk orders in te laden in het verzendsysteem van Parcel Pro.",
+  "version": "2.17.0",
   "keywords": [
     "verzenden",
     "pakket",
