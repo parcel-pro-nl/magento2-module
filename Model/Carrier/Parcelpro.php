@@ -297,6 +297,11 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         curl_close($curlHandle);
 
         if ($responseCode !== 200) {
+            $this->_logger->error(sprintf(
+                'Failed to get expected delivery date, response code %s, body:\n%s',
+                $responseCode,
+                $responseBody
+            ));
             return false;
         }
 
