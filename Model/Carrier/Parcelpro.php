@@ -282,7 +282,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                 'Content-Type: application/json',
                 'Digest: ' . hash_hmac(
                     "sha256",
-                    sprintf('Boekingsdatum=%s&GebruikerId=%sPostcode=%s', $date, $userId, $postcode),
+                    sprintf('Boekingsdatum=%sGebruikerId=%sPostcode=%s', $date, $userId, $postcode),
                     $apiKey
                 ),
             ],
