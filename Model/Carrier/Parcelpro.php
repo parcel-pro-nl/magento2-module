@@ -317,6 +317,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
     private function formatDeliveryDate(\DateTimeInterface $date)
     {
+        // TODO: Get locale from checkout
         return \IntlDateFormatter::formatObject($date, 'd MMMM', 'nl_NL');
     }
 }
