@@ -166,11 +166,13 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                 /** @var \Magento\Checkout\Model\Session $checkoutSession */
                                 $checkoutSession = $objectManager->create('\Magento\Checkout\Model\Session');
 
-                                // TODO: Add and check option for last possible time.
-                                $today = date('Y-m-d');
+                                $sendDay = new \DateTime();
+                                if (!$this->isBeforeLastShippingTime($this->getConfigData('postnl_last_shipping_time'))) {
+                                    $sendDay->add(new \DateInterval('P1D'));
+                                }
 
                                 $deliveryDate = $this->getPostnlDeliveryDate(
-                                    $today,
+                                    $sendDay,
                                     $checkoutSession->getQuote()->getShippingAddress()->getPostcode()
                                 );
 
@@ -270,8 +272,9 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         return $freeBoxes;
     }
 
-    private function getPostnlDeliveryDate(string $date, string $postcode)
+    private function getPostnlDeliveryDate(\DateTimeInterface $dateTime, string $postcode)
     {
+        $date = $dateTime->format('Y-m-d');
         $userId = $this->getConfigData('gebruiker_id');
         $apiKey = $this->getConfigData('api_key');
 
@@ -325,5 +328,22 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
     {
         $locale = $this->localeResolver->getLocale();
         return \IntlDateFormatter::formatObject($date, 'd MMMM', $locale);
+    }
+
+    private function isBeforeLastShippingTime(string $rawLastTime): bool
+    {
+        try {
+            $parsed = new \DateTime($rawLastTime);
+        } catch (\Exception $e) {
+            $this->_logger->error(sprintf(
+                'Failed to parse last shipping time (%s): %s',
+                $rawLastTime,
+                $e->getMessage()
+            ));
+            return true;
+        }
+
+        $now = new \DateTime();
+        return $now < $parsed;
     }
 }
