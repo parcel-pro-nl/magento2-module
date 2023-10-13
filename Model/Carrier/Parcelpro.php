@@ -177,7 +177,10 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                 );
 
                                 if ($deliveryDate) {
-                                    $method->setCarrierTitle('PostNL (' . $deliveryDate . ')');
+                                    $method->setCarrierTitle(sprintf(
+                                        'PostNL (%s)',
+                                        $this->formatDeliveryDate($deliveryDate)
+                                    ));
                                 }
                             }
                         } elseif (strpos(strtolower($key), 'dhl') !== false) {
@@ -321,7 +324,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
             return false;
         }
 
-        return $this->formatDeliveryDate(\DateTimeImmutable::createFromFormat('d-m-Y', $rawDate));
+        return \DateTimeImmutable::createFromFormat('d-m-Y', $rawDate);
     }
 
     private function formatDeliveryDate(\DateTimeInterface $date)
