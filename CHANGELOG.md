@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.18.0 - TODO
+
+### New
+
+- Optie om verwachte bezorgdatum voor PostNL weer te geven toegevoegd
+
 ## 2.17.0 - 2023-10-05
 
 ### New
