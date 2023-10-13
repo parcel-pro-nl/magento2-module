@@ -10,6 +10,9 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 {
     protected $_code = 'parcelpro';
 
+    /** @var \Magento\Framework\Locale\Resolver */
+    protected $localeResolver;
+
     private $apiUrl = 'https://login.parcelpro.nl';
 
     public function __construct(
@@ -19,11 +22,13 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
         \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
         \Magento\Framework\Serialize\Serializer\Json $serialize,
+        \Magento\Framework\Locale\Resolver $localeResolver,
         array $data = []
     ) {
         $this->_rateResultFactory = $rateResultFactory;
         $this->_rateMethodFactory = $rateMethodFactory;
         $this->serialize = $serialize;
+        $this->localeResolver = $localeResolver;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 
@@ -106,6 +111,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         foreach ($am as $key => $value) {
             if ($this->getConfigData($key)) {
                 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                /** @var \Magento\Framework\App\State $state */
                 $state = $objectManager->get('\Magento\Framework\App\State');
                 $_pricIncl = $this->getConfigData('price_incl');
                 if ($state->getAreaCode() == \Magento\Framework\App\Area::AREA_ADMINHTML) {
@@ -317,7 +323,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
     private function formatDeliveryDate(\DateTimeInterface $date)
     {
-        // TODO: Get locale from checkout
-        return \IntlDateFormatter::formatObject($date, 'd MMMM', 'nl_NL');
+        $locale = $this->localeResolver->getLocale();
+        return \IntlDateFormatter::formatObject($date, 'd MMMM', $locale);
     }
 }
