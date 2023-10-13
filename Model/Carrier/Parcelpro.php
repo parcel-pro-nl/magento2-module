@@ -306,8 +306,17 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         }
 
         $responseJson = json_decode($responseBody, true);
-        return $responseJson['PostNL']['DeliveryDate'] ?? false;
+        $rawDate = $responseJson['PostNL']['DeliveryDate'] ?? false;
 
-        // TODO: Format date.
+        if (!$rawDate) {
+            return false;
+        }
+
+        return $this->formatDeliveryDate(\DateTimeImmutable::createFromFormat('d-m-Y', $rawDate));
+    }
+
+    private function formatDeliveryDate(\DateTimeInterface $date)
+    {
+        return \IntlDateFormatter::formatObject($date, 'd MMMM', 'nl_NL');
     }
 }
