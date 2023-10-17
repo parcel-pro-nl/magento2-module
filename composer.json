@@ -47,6 +47,7 @@
   "scripts": {
     "cs:check": "phpcs",
     "cs:fix": "phpcbf",
-    "md": "phpmd . ansi phpmd.xml --exclude vendor"
+    "md": "phpmd . ansi phpmd.xml --exclude vendor",
+    "md:text": "phpmd . text phpmd.xml --exclude vendor"
   }
 }

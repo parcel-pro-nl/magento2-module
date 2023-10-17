@@ -8,6 +8,9 @@
     <description>The Parcel Pro mess detection ruleset.</description>
 
     <rule ref="rulesets/cleancode.xml">
-        <!-- TODO: Check which rules we want to disable. -->
+        <exclude name="StaticAccess" />
+        <exclude name="ElseExpression" />
+        <exclude name="BooleanArgumentFlag" />
     </rule>
+    <!-- TODO: Check which other rulesets we want to enable. -->
 </ruleset>
