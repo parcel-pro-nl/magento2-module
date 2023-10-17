@@ -182,7 +182,6 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
                     if ($key == "custom_pricerule") {
                         $counter = 0;
-                        $carrier = null;
                         foreach ($pricerules as $pricerule) {
                             if ($pricerule['country'] != $countryId) {
                                 continue;
