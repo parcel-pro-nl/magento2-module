@@ -333,8 +333,12 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         return \IntlDateFormatter::formatObject($date, 'd MMMM', $locale);
     }
 
-    private function isBeforeLastShippingTime(string $rawLastTime): bool
+    private function isBeforeLastShippingTime($rawLastTime): bool
     {
+        if (!$rawLastTime) {
+            return true;
+        }
+
         try {
             $parsed = new \DateTime($rawLastTime);
         } catch (\Exception $e) {
