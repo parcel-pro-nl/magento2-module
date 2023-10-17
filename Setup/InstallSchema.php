@@ -9,7 +9,7 @@ use Magento\Framework\Setup\ModuleContextInterface;
 class InstallSchema implements InstallSchemaInterface
 {
     /**
-     * @SuppressWarnings("UnusedFormalParameter")
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {

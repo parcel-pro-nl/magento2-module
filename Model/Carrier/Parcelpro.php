@@ -112,7 +112,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
         $result = $this->_rateResultFactory->create();
         $am = $this->getAllowedMethods();
-        foreach ($am as $key => $value) {
+        foreach ($am as $key => $_) {
             if ($this->getConfigData($key)) {
                 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                 $state = $objectManager->get('\Magento\Framework\App\State');

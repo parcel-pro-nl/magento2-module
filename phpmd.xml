@@ -9,14 +9,27 @@
     <!-- See: https://phpmd.org/rules/index.html -->
 
     <rule ref="rulesets/cleancode.xml">
-        <exclude name="StaticAccess" />
-        <exclude name="ElseExpression" />
-        <exclude name="BooleanArgumentFlag" />
+        <exclude name="StaticAccess"/>
+        <exclude name="ElseExpression"/>
+        <exclude name="BooleanArgumentFlag"/>
     </rule>
 
     <rule ref="rulesets/design.xml">
-        <exclude name="CouplingBetweenObjects" />
+        <exclude name="CouplingBetweenObjects"/>
     </rule>
 
-    <rule ref="rulesets/unusedcode.xml" />
+    <rule ref="rulesets/unusedcode.xml">
+        <exclude name="UnusedLocalVariable"/>
+    </rule>
+    <!--
+    We don't want to use the standard "UnusedLocalVariable" rule, since it gives a false-positive in this scenario:
+    `foreach ($arr as $key => $value) {`
+    where only `$key` is used.
+    Instead, we want to be able to use `$_` instead of `$value` to indicate an unused variable.
+    -->
+    <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable">
+        <properties>
+            <property name="exceptions" value="_"/>
+        </properties>
+    </rule>
 </ruleset>
