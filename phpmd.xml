@@ -17,4 +17,6 @@
     <rule ref="rulesets/design.xml">
         <exclude name="CouplingBetweenObjects" />
     </rule>
+
+    <rule ref="rulesets/unusedcode.xml" />
 </ruleset>

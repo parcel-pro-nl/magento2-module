@@ -61,7 +61,7 @@ class Printlabel extends \Magento\Backend\App\Action
             if ($order_id) {
                 if (is_array($order_id)) {
                     $url = null;
-                    foreach ($order_id as $k => $v) {
+                    foreach ($order_id as $v) {
                         $res = $this->printlabelAction($v, true, null);
                         if (strpos($res, 'error') !== false) {
                             $message .= $res . "<br>";

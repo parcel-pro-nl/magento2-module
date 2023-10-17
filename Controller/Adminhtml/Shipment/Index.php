@@ -60,7 +60,7 @@ class Index extends \Magento\Backend\App\Action
         } else {
             if ($order_id) {
                 if (is_array($order_id)) {
-                    foreach ($order_id as $k => $v) {
+                    foreach ($order_id as $v) {
                         $message .= $this->postToParcelPro($v);
                         $message .= "<br>";
                     }
