@@ -8,6 +8,9 @@ use Magento\Framework\Setup\ModuleContextInterface;
 
 class InstallSchema implements InstallSchemaInterface
 {
+    /**
+     * @SuppressWarnings("UnusedFormalParameter")
+     */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();

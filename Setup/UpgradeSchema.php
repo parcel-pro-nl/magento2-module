@@ -8,6 +8,9 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 
 class UpgradeSchema implements UpgradeSchemaInterface
 {
+    /**
+     * @SuppressWarnings("UnusedFormalParameter")
+     */
     public function upgrade(
         SchemaSetupInterface $setup,
         ModuleContextInterface $context
