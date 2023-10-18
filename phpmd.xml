@@ -14,9 +14,7 @@
         <exclude name="BooleanArgumentFlag"/>
     </rule>
 
-    <rule ref="rulesets/design.xml">
-        <exclude name="CouplingBetweenObjects"/>
-    </rule>
+    <rule ref="rulesets/design.xml"/>
 
     <rule ref="rulesets/unusedcode.xml">
         <exclude name="UnusedLocalVariable"/>
@@ -26,6 +24,8 @@
     `foreach ($arr as $key => $value) {`
     where only `$key` is used.
     Instead, we want to be able to use `$_` instead of `$value` to indicate an unused variable.
+    The above example would then become:
+    `foreach ($arr as $key => $_) {`
     -->
     <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable">
         <properties>

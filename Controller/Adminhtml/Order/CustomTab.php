@@ -7,6 +7,9 @@ use Magento\Sales\Api\OrderManagementInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class CustomTab extends \Magento\Sales\Controller\Adminhtml\Order
 {
     /**
@@ -27,9 +30,6 @@ class CustomTab extends \Magento\Sales\Controller\Adminhtml\Order
      * @param OrderRepositoryInterface $orderRepository
      * @param LoggerInterface $logger
      * @param \Magento\Framework\View\LayoutFactory $layoutFactory
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
      */
     public function __construct(
         Action\Context $context,
