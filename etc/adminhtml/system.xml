@@ -63,11 +63,11 @@
                     <label>PostNL versturen via parcelpro.nl</label>
                 </field>
                 <field id="postnl_show_expected_delivery_date" translate="label" type="select" sortOrder="201" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Geef verwachte bezorgdatum weer</label>
+                    <label>Geef verwachte PostNL bezorgdatum weer</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="postnl_last_shipping_time" translate="label" type="text" sortOrder="202" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Laatste verzendtijd voor huidige dag</label>
+                    <label>Laatste verzendtijd (met tijdzone) voor huidige dag (bijv.: "22:00 Europe/Amsterdam")</label>
                     <tooltip>
                         <![CDATA[De laatste tijd waarop bestellingen verzonden kunnen worden. Na deze tijd wordt de verwachte bezorging vanaf de volgende dag genomen. Bijvoorbeeld: "22:00 Europe/Amsterdam".]]>
                     </tooltip>
