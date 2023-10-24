@@ -2,9 +2,14 @@
 
 namespace Parcelpro\Shipment\Model\Carrier;
 
+use DateInterval;
+use DateTime;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Shipping\Model\Rate\Result;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     \Magento\Shipping\Model\Carrier\CarrierInterface
 {
@@ -164,9 +169,9 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                 /** @var \Magento\Checkout\Model\Session $checkoutSession */
                                 $checkoutSession = $objectManager->create('\Magento\Checkout\Model\Session');
 
-                                $sendDay = new \DateTime();
+                                $sendDay = new DateTime();
                                 if (!$this->isBeforeLastShippingTime($this->getConfigData('postnl_last_shipping_time'))) {
-                                    $sendDay->add(new \DateInterval('P1D'));
+                                    $sendDay->add(new DateInterval('P1D'));
                                 }
 
                                 $deliveryDate = $this->getPostnlDeliveryDate(
@@ -299,7 +304,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         }
 
         try {
-            $parsed = new \DateTime($rawLastTime);
+            $parsed = new DateTime($rawLastTime);
         } catch (\Exception $e) {
             $this->_logger->error(sprintf(
                 'Failed to parse last shipping time (%s): %s',
@@ -309,7 +314,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
             return true;
         }
 
-        $now = new \DateTime();
+        $now = new DateTime();
         return $now < $parsed;
     }
 }
