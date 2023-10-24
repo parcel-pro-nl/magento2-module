@@ -3,6 +3,7 @@
 namespace Parcelpro\Shipment\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Parcelpro\Shipment\Model\ParcelproFactory;
 
 class Shipment implements ObserverInterface
@@ -123,7 +124,7 @@ class Shipment implements ObserverInterface
                         $response_body = json_decode($response_body, true);
 
                         if ($response_code != 200) {
-                            throw new \Magento\Framework\Exception\LocalizedException(__(sprintf("De zending is niet succesvol aangemeld bij ParcelPro foutcode: %s, melding: %s", $response_code, $response_body['omschrijving']), 10));
+                            throw new LocalizedException(__(sprintf("De zending is niet succesvol aangemeld bij ParcelPro foutcode: %s, melding: %s", $response_code, $response_body['omschrijving']), 10));
                         }
 
                         if (isset($response_body['Barcode'])) {
@@ -152,7 +153,7 @@ class Shipment implements ObserverInterface
                     }
                 }
             }
-        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+        } catch (LocalizedException $e) {
             $this->logger->debug($e);
         }
     }

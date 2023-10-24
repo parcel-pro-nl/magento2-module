@@ -2,6 +2,7 @@
 
 namespace Parcelpro\Shipment\Controller\Adminhtml\Shipment;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Setup\Exception;
 use Parcelpro\Shipment\Model\ParcelproFactory;
 
@@ -59,7 +60,7 @@ class Index extends \Magento\Backend\App\Action
         } else {
             if ($order_id) {
                 if (is_array($order_id)) {
-                    foreach ($order_id as $k => $v) {
+                    foreach ($order_id as $v) {
                         $message .= $this->postToParcelPro($v);
                         $message .= "<br>";
                     }
@@ -163,7 +164,7 @@ class Index extends \Magento\Backend\App\Action
             $response_body = json_decode($response_body, true);
 
             if ($response_code != 200) {
-                throw new \Magento\Framework\Exception\LocalizedException(__(sprintf("De zending is niet succesvol aangemeld bij ParcelPro foutcode: %s, melding: %s", $response_code, $response_body['omschrijving']), 10));
+                throw new LocalizedException(__(sprintf("De zending is niet succesvol aangemeld bij ParcelPro foutcode: %s, melding: %s", $response_code, $response_body['omschrijving']), 10));
             }
 
             if (isset($response_body['Barcode'])) {
@@ -200,7 +201,7 @@ class Index extends \Magento\Backend\App\Action
 
                 return sprintf("Order %s succesvol aangemaakt", $order_id);
             }
-        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+        } catch (LocalizedException $e) {
             return sprintf("Order %s geeft een error", $order_id);
         }
     }

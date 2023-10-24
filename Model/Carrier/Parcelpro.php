@@ -112,7 +112,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
         $result = $this->_rateResultFactory->create();
         $am = $this->getAllowedMethods();
-        foreach ($am as $key => $value) {
+        foreach ($am as $key => $_) {
             if ($this->getConfigData($key)) {
                 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                 $state = $objectManager->get('\Magento\Framework\App\State');
@@ -121,8 +121,6 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                     $object = $objectManager->create('\Magento\Sales\Model\AdminOrder\Create');
                     $total = $object->getQuote()->getSubtotal();
                     $grandTotal = $object->getQuote()->getGrandTotal();
-
-                    $freeBoxes = $this->getFreeBoxesCount($request);
                 } else {
                     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                     $total = $objectManager->create('\Magento\Checkout\Model\Session')
@@ -182,7 +180,6 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
                     if ($key == "custom_pricerule") {
                         $counter = 0;
-                        $carrier = null;
                         foreach ($pricerules as $pricerule) {
                             if ($pricerule['country'] != $countryId) {
                                 continue;
@@ -216,43 +213,5 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
             }
         }
         return $result;
-    }
-
-    /**
-     * @param RateRequest $request
-     * @return int
-     */
-    private function getFreeBoxesCount(RateRequest $request)
-    {
-        $freeBoxes = 0;
-        if ($request->getAllItems()) {
-            foreach ($request->getAllItems() as $item) {
-                if ($item->getProduct()->isVirtual() || $item->getParentItem()) {
-                    continue;
-                }
-
-                if ($item->getHasChildren() && $item->isShipSeparately()) {
-                    $freeBoxes += $this->getFreeBoxesCountFromChildren($item);
-                } elseif ($item->getFreeShipping()) {
-                    $freeBoxes += $item->getQty();
-                }
-            }
-        }
-        return $freeBoxes;
-    }
-
-    /**
-     * @param mixed $item
-     * @return mixed
-     */
-    private function getFreeBoxesCountFromChildren($item)
-    {
-        $freeBoxes = 0;
-        foreach ($item->getChildren() as $child) {
-            if ($child->getFreeShipping() && !$child->getProduct()->isVirtual()) {
-                $freeBoxes += $item->getQty() * $child->getQty();
-            }
-        }
-        return $freeBoxes;
     }
 }

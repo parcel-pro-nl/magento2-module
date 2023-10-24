@@ -8,6 +8,9 @@ class PluginBefore
 {
     protected $_url = 'https://login.parcelpro.nl';
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function beforePushButtons(
         \Magento\Backend\Block\Widget\Button\Toolbar\Interceptor $subject,
         \Magento\Framework\View\Element\AbstractBlock $context,
