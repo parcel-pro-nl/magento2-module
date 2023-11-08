@@ -239,8 +239,12 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         return $result;
     }
 
-    private function getPostnlDeliveryDate(\DateTimeInterface $dateTime, string $postcode)
+    private function getPostnlDeliveryDate(\DateTimeInterface $dateTime, $postcode)
     {
+        if (!$postcode) {
+            return false;
+        }
+
         $date = $dateTime->format('Y-m-d');
         $userId = $this->getConfigData('gebruiker_id');
         $apiKey = $this->getConfigData('api_key');
