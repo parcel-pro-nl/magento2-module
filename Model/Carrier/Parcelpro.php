@@ -138,7 +138,10 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                 $weight = $request->getPackageWeight();
                 $shippingPrice = false;
 
-                $pricerules = $this->serialize->unserialize($this->getConfigData($key));
+                $configData = $this->getConfigData($key);
+                if (is_string($configData)) {
+                    $pricerules = $this->serialize->unserialize($configData);
+                }
 
                 if (!empty($pricerules)) {
                     foreach ($pricerules as $pricerule) {
