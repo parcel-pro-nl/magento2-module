@@ -6,6 +6,12 @@
 
 - Optie om verwachte bezorgdatum voor PostNL weer te geven toegevoegd
 
+## 2.17.1 - 2023-11-14
+
+### Fixes
+
+- Fix unserialization error bij het laden van price rules
+
 ## 2.17.0 - 2023-10-05
 
 ### New
