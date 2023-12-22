@@ -14,3 +14,8 @@ De handleiding is te vinden op https://www.parcelpro.nl/koppelingen/magento.
 Deze repository zal geplaatst moeten worden in uw `app/code/Parcelpro/Shipment` directory.
 
 Bij vragen kunt u contact opnemen via https://www.parcelpro.nl/over-ons.
+
+
+## Development
+
+Voor alle development informatie, zie de [development guide](DEVELOPMENT.md).
