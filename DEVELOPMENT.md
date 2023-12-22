@@ -25,6 +25,17 @@ Default credentials:
 - Username: `admin`
 - Password: `parcelpro1`
 
+## Installing the Module
+
+The easiest way to install the module is by running `./install.sh`.
+This will copy the files into the container, and update Magento.
+
+**Note:** the install script is not perfect, and sometimes it will still be necessary to manually go into the container and flush (specific parts of) the cache.
+
+## Shell
+
+To get a shell in the running Magento container, run `./cli.sh`.
+
 ## Shutting Down
 
 Stop the containers, but keep their data:
@@ -38,10 +49,6 @@ Stop and remove the containers and volumes:
 ```shell
 docker compose down -v
 ```
-
-## Shell
-
-To get a shell in the running Magento container, run `./cli.sh`.
 
 ## Code Style
 
