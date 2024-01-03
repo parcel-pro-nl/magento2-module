@@ -116,6 +116,16 @@
                 <field id="dhl_title" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>DHL versturen via parcelpro.nl</label>
                 </field>
+                <field id="dhl_show_expected_delivery_date" translate="label" type="select" sortOrder="301" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Geef verwachte DHL bezorgdatum weer</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="dhl_last_shipping_time" translate="label" type="text" sortOrder="302" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Laatste verzendtijd (met tijdzone) voor huidige dag (bijv.: "22:00 Europe/Amsterdam")</label>
+                    <tooltip>
+                        <![CDATA[De laatste tijd waarop bestellingen verzonden kunnen worden. Na deze tijd wordt de verwachte bezorging vanaf de volgende dag genomen. Bijvoorbeeld: "22:00 Europe/Amsterdam".]]>
+                    </tooltip>
+                </field>
                 <field id="dhl_afleveradres" translate="label" type="text" sortOrder="310" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>DHL Afleveradres</label>
                     <frontend_model>Parcelpro\Shipment\Block\Adminhtml\System\Config\Form\Field\Countriesmap</frontend_model>
