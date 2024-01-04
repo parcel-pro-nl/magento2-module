@@ -166,7 +166,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                         $method->setCarrier($this->_code);
 
                         if (strpos(strtolower($key), 'postnl') !== false) {
-                            $method->setCarrierTitle('PostNL');
+                            $method->setCarrierTitle('PostNL TEST');
 
                             if ($this->getConfigData('postnl_show_expected_delivery_date')) {
                                 /** @var \Magento\Checkout\Model\Session $checkoutSession */
@@ -176,11 +176,16 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                 if (!$this->isBeforeLastShippingTime($this->getConfigData('postnl_last_shipping_time'))) {
                                     $sendDay->add(new DateInterval('P1D'));
                                 }
-
-                                $deliveryDate = $this->getPostnlDeliveryDate(
+                                $this->_logger->debug("getting delivery date ");
+                                $shippingAddress = $checkoutSession->getQuote()->getShippingAddress();
+                                $deliveryDate = $this->getDeliveryDate(
+                                    'PostNL',
                                     $sendDay,
-                                    $checkoutSession->getQuote()->getShippingAddress()->getPostcode()
+                                    // TODO: set correct house number
+                                    $shippingAddress->getPostcode(),
+                                    '1'
                                 );
+                                $this->_logger->debug("fetched delivery: $deliveryDate");
 
                                 if ($deliveryDate) {
                                     $method->setCarrierTitle(sprintf(
@@ -190,7 +195,35 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                 }
                             }
                         } elseif (strpos(strtolower($key), 'dhl') !== false) {
-                            $method->setCarrierTitle('DHL');
+                            $method->setCarrierTitle('DHLtest');
+
+                            if ($this->getConfigData('dhl_show_expected_delivery_date')) {
+                                /** @var \Magento\Checkout\Model\Session $checkoutSession */
+                                $checkoutSession = $objectManager->create('\Magento\Checkout\Model\Session');
+
+                                $sendDay = new DateTime();
+                                if (!$this->isBeforeLastShippingTime($this->getConfigData('dhl_last_shipping_time'))) {
+                                    $sendDay->add(new DateInterval('P1D'));
+                                }
+
+                                $this->_logger->debug("getting delivery date ");
+                                $shippingAddress = $checkoutSession->getQuote()->getShippingAddress();
+                                $deliveryDate = $this->getDeliveryDate(
+                                    'DHL',
+                                    $sendDay,
+                                    // TODO: set correct house number
+                                    $shippingAddress->getPostcode(),
+                                    '1'
+                                );
+                                $this->_logger->debug("fetched delivery: $deliveryDate");
+
+                                if ($deliveryDate) {
+                                    $method->setCarrierTitle(sprintf(
+                                        'DHL (%s)',
+                                        $this->formatDeliveryDate($deliveryDate)
+                                    ));
+                                }
+                            }
                         } elseif (strpos(strtolower($key), 'vsp') !== false) {
                             $method->setCarrierTitle('Van Straaten Post');
                         } elseif (strpos(strtolower($key), 'sameday') !== false) {
@@ -242,9 +275,9 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         return $result;
     }
 
-    private function getPostnlDeliveryDate(\DateTimeInterface $dateTime, $postcode)
+    private function getDeliveryDate(string $carrier, \DateTimeInterface $dateTime, $postcode, $number)
     {
-        if (!$postcode) {
+        if (!$postcode || !$number) {
             return false;
         }
 
@@ -254,18 +287,20 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
         $query = http_build_query([
             'Boekingsdatum' => $date,
+            'Nummer' => $number,
             'Postcode' => $postcode,
             'GebruikerId' => $userId,
+            'Map' => true,
         ]);
 
         $curlHandle = curl_init();
         curl_setopt_array($curlHandle, [
-            CURLOPT_URL => $this->apiUrl . '/api/v3/delivery_date.php?' . $query,
+            CURLOPT_URL => $this->apiUrl . '/api/v3/timeframes.php?' . $query,
             CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
                 'Digest: ' . hash_hmac(
                     "sha256",
-                    sprintf('Boekingsdatum=%sGebruikerId=%sPostcode=%s', $date, $userId, $postcode),
+                    sprintf('GebruikerId=%sNummer=%sPostcode=%s', $userId, $number, $postcode),
                     $apiKey
                 ),
             ],
@@ -289,13 +324,13 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         }
 
         $responseJson = json_decode($responseBody, true);
-        $rawDate = $responseJson['PostNL']['DeliveryDate'] ?? false;
+        $rawDate = $responseJson[$carrier]['Date'] ?? false;
 
         if (!$rawDate) {
             return false;
         }
 
-        return \DateTimeImmutable::createFromFormat('d-m-Y', $rawDate);
+        return \DateTimeImmutable::createFromFormat('Y-m-d', $rawDate);
     }
 
     private function formatDeliveryDate(\DateTimeInterface $date)
