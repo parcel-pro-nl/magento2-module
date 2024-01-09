@@ -76,7 +76,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
         $matches = explode('_', $key);
         if ($matches[0] === 'dhl') {
-            $rate->setCarrierTitle($this->getConfigData('dhl_title'));
+            $rate->setCarrierTitle($this->getConfigData('dhl_title') . "line79");
         }
         if ($matches[0] === 'postnl') {
             $rate->setCarrierTitle($this->getConfigData('postnl_title'));
@@ -107,6 +107,9 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
      */
     public function collectRates(RateRequest $request)
     {
+//        $fp = fopen('/bitnami/magento/debug.txt', 'a');//opens file in append mode
+//        fwrite($fp, 'collecting rates \n/n');
+//        fclose($fp);
         if (!$this->getConfigFlag('active')) {
             return false;
         }
@@ -166,7 +169,8 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                         $method->setCarrier($this->_code);
 
                         if (strpos(strtolower($key), 'postnl') !== false) {
-                            $method->setCarrierTitle('PostNL TEST');
+                            $carrierTitle = 'PostNL';
+
 
                             if ($this->getConfigData('postnl_show_expected_delivery_date')) {
                                 /** @var \Magento\Checkout\Model\Session $checkoutSession */
@@ -176,7 +180,6 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                 if (!$this->isBeforeLastShippingTime($this->getConfigData('postnl_last_shipping_time'))) {
                                     $sendDay->add(new DateInterval('P1D'));
                                 }
-                                $this->_logger->debug("getting delivery date ");
                                 $shippingAddress = $checkoutSession->getQuote()->getShippingAddress();
                                 $deliveryDate = $this->getDeliveryDate(
                                     'PostNL',
@@ -185,17 +188,14 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                     $shippingAddress->getPostcode(),
                                     '1'
                                 );
-                                $this->_logger->debug("fetched delivery: $deliveryDate");
 
                                 if ($deliveryDate) {
-                                    $method->setCarrierTitle(sprintf(
-                                        'PostNL (%s)',
-                                        $this->formatDeliveryDate($deliveryDate)
-                                    ));
+                                    $carrierTitle .= ' (' . $this->formatDeliveryDate($deliveryDate) . ')';
                                 }
                             }
+                            $method->setCarrierTitle($carrierTitle);
                         } elseif (strpos(strtolower($key), 'dhl') !== false) {
-                            $method->setCarrierTitle('DHLtest');
+                            $carrierTitle = 'DHL';
 
                             if ($this->getConfigData('dhl_show_expected_delivery_date')) {
                                 /** @var \Magento\Checkout\Model\Session $checkoutSession */
@@ -206,7 +206,6 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                     $sendDay->add(new DateInterval('P1D'));
                                 }
 
-                                $this->_logger->debug("getting delivery date ");
                                 $shippingAddress = $checkoutSession->getQuote()->getShippingAddress();
                                 $deliveryDate = $this->getDeliveryDate(
                                     'DHL',
@@ -215,15 +214,12 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                     $shippingAddress->getPostcode(),
                                     '1'
                                 );
-                                $this->_logger->debug("fetched delivery: $deliveryDate");
 
                                 if ($deliveryDate) {
-                                    $method->setCarrierTitle(sprintf(
-                                        'DHL (%s)',
-                                        $this->formatDeliveryDate($deliveryDate)
-                                    ));
+                                    $carrierTitle .= ' (' . $this->formatDeliveryDate($deliveryDate) . ')';
                                 }
                             }
+                            $method->setCarrierTitle($carrierTitle);
                         } elseif (strpos(strtolower($key), 'vsp') !== false) {
                             $method->setCarrierTitle('Van Straaten Post');
                         } elseif (strpos(strtolower($key), 'sameday') !== false) {
