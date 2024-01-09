@@ -107,9 +107,6 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
      */
     public function collectRates(RateRequest $request)
     {
-//        $fp = fopen('/bitnami/magento/debug.txt', 'a');//opens file in append mode
-//        fwrite($fp, 'collecting rates \n/n');
-//        fclose($fp);
         if (!$this->getConfigFlag('active')) {
             return false;
         }
