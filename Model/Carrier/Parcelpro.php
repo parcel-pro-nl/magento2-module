@@ -181,9 +181,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                 $deliveryDate = $this->getDeliveryDate(
                                     'PostNL',
                                     $sendDay,
-                                    // TODO: set correct house number
-                                    $shippingAddress->getPostcode(),
-                                    '1'
+                                    $shippingAddress->getPostcode()
                                 );
 
                                 if ($deliveryDate) {
@@ -207,9 +205,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                 $deliveryDate = $this->getDeliveryDate(
                                     'DHL',
                                     $sendDay,
-                                    // TODO: set correct house number
                                     $shippingAddress->getPostcode(),
-                                    '1'
                                 );
 
                                 if ($deliveryDate) {
@@ -268,9 +264,9 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         return $result;
     }
 
-    private function getDeliveryDate(string $carrier, \DateTimeInterface $dateTime, $postcode, $number)
+    private function getDeliveryDate(string $carrier, \DateTimeInterface $dateTime, $postcode)
     {
-        if (!$postcode || !$number) {
+        if (!$postcode) {
             return false;
         }
 
@@ -280,7 +276,6 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
         $query = http_build_query([
             'Boekingsdatum' => $date,
-            'Nummer' => $number,
             'Postcode' => $postcode,
             'GebruikerId' => $userId,
             'Map' => true,
@@ -293,7 +288,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                 'Content-Type: application/json',
                 'Digest: ' . hash_hmac(
                     "sha256",
-                    sprintf('GebruikerId=%sNummer=%sPostcode=%s', $userId, $number, $postcode),
+                    sprintf('GebruikerId=%sPostcode=%s', $userId, $postcode),
                     $apiKey
                 ),
             ],
