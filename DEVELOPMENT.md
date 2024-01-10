@@ -1,6 +1,6 @@
 # Development Guide
 
-A Docker Compose setup for Magento 2, based around the [bitnami/magento](https://hub.docker.com/r/bitnami/magento) image.
+A Docker setup for Magento 2, adapted from [Mark Shust's Docker Configuration for Magento](https://github.com/markshust/docker-magento).
 
 ## Setup
 

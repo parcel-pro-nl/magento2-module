@@ -4,3 +4,6 @@ composer.lock
 
 # IDEs
 .idea/
+
+# Magento install
+/Magento

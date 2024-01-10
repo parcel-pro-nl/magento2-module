@@ -1,33 +1,26 @@
 #!/usr/bin/env bash
-set -euxo pipefail
+set -o errexit
 
-# A simple function to run commands in the Magento Docker container, with the right user.
-function dx {
-    docker compose exec -w '/bitnami/magento' -u 'daemon:root' magento "$@"
-}
+# Create the Magento install directory then go into it:
+mkdir -p ./Magento
 
-# Enable developer mode, so the logs will contain more info.
-dx php bin/magento deploy:mode:set developer
+DOMAIN=${1:-magento.test}
+VERSION=${2:-2.4.6-p3}
+EDITION=${3:-community}
 
-# Remove the old module.
-dx mkdir -p app/code/Parcelpro
-dx rm -rf app/code/Parcelpro/Shipment
+git init -qqq
+git remote add origin https://github.com/parcel-pro-nl/docker-magento
+git fetch origin -qqq
+git checkout origin/master -- compose
+mv compose/* ./
+mv compose/.gitignore ./
+mv compose/.vscode ./
+rm -rf compose .git
+git init
 
-# Copy the module files.
-docker compose cp ../magento2-module magento:/bitnami/magento/app/code/Parcelpro
-dx mv 'app/code/Parcelpro/magento2-module' 'app/code/Parcelpro/Shipment'
-docker compose exec magento chown -R 'daemon:root' '/bitnami/magento/app/code/Parcelpro'
-dx rm -rf 'app/code/Parcelpro/Shipment/vendor'
+# Ensure these are created so Docker doesn't create them as root
+mkdir -p ~/.composer ~/.ssh
 
-# Enable the module.
-dx php bin/magento module:enable --clear-static-content Parcelpro_Shipment
-
-# Remove the old generated code.
-dx rm -r generated
-
-# Update the Magento setup and flush the cache.
-dx php bin/magento setup:upgrade
-dx php bin/magento setup:di:compile
-dx php bin/magento setup:static-content:deploy -f
-dx php bin/magento cache:clean
-dx php bin/magento cache:flush
+# &&'s are used below otherwise onelinesetup script fails/errors after bin/download
+bin/download "${VERSION}" "${EDITION}" \
+  && bin/setup "${DOMAIN}"
