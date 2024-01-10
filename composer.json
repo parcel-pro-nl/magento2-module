@@ -9,9 +9,6 @@
     "postnl",
     "dhl"
   ],
-  "platform": {
-    "php": "^8.2"
-  },
   "type": "magento2-module",
   "require": {
     "php": ">=7.1",
