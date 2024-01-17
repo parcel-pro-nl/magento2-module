@@ -275,7 +275,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         $apiKey = $this->getConfigData('api_key');
 
         $query = http_build_query([
-            'Boekingsdatum' => $date,
+            'Startdatum' => $date,
             'Postcode' => $postcode,
             'GebruikerId' => $userId,
             'Map' => true,
@@ -288,7 +288,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                 'Content-Type: application/json',
                 'Digest: ' . hash_hmac(
                     "sha256",
-                    sprintf('GebruikerId=%sPostcode=%s', $userId, $postcode),
+                    sprintf('GebruikerId=%sPostcode=%sStartdatum=%s', $userId, $postcode, $date),
                     $apiKey
                 ),
             ],
