@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.17.2 - 2024-01-18
+
+### Fixes
+
+- Fix error wanneer `gebruiker_id` config niet bestaat
+
 ## 2.17.1 - 2023-11-14
 
 ### Fixes
@@ -99,7 +105,6 @@
 
 - Afdrukken en aanmelden van zendingen(batch)
 - Status aanpassen na afdrukken
-
 
 ## 2.8.0 - 2019-08-30
 
