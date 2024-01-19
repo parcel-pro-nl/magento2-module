@@ -13,7 +13,8 @@ define(
         'Magento_Checkout/js/model/payment/method-converter',
         'Magento_Checkout/js/model/error-processor',
         'Magento_Checkout/js/model/full-screen-loader',
-        'Magento_Checkout/js/action/select-billing-address'
+        'Magento_Checkout/js/action/select-billing-address',
+        'Magento_Checkout/js/model/shipping-save-processor/payload-extender'
     ],
     function (
         ko,
@@ -24,7 +25,8 @@ define(
         methodConverter,
         errorProcessor,
         fullScreenLoader,
-        selectBillingAddressAction
+        selectBillingAddressAction,
+        payloadExtender
     ) {
         'use strict';
 
@@ -63,12 +65,14 @@ define(
 
                 payload = {
                     addressInformation: {
-                        shipping_address: quote.shippingAddress(),
-                        billing_address: quote.billingAddress(),
-                        shipping_method_code: quote.shippingMethod().method_code,
-                        shipping_carrier_code: quote.shippingMethod().carrier_code
+                        'shipping_address': quote.shippingAddress(),
+                        'billing_address': quote.billingAddress(),
+                        'shipping_method_code': quote.shippingMethod()['method_code'],
+                        'shipping_carrier_code': quote.shippingMethod()['carrier_code']
                     }
                 };
+
+                payloadExtender(payload);
 
                 fullScreenLoader.startLoader();
 
@@ -78,7 +82,7 @@ define(
                 ).done(
                     function (response) {
                         quote.setTotals(response.totals);
-                        paymentService.setPaymentMethods(methodConverter(response.payment_methods));
+                        paymentService.setPaymentMethods(methodConverter(response['payment_methods']));
                         fullScreenLoader.stopLoader();
                     }
                 ).fail(
