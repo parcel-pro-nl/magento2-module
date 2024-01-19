@@ -111,11 +111,16 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
             return false;
         }
 
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+        /** @var \Magento\Checkout\Model\Session $checkoutSession */
+        $checkoutSession = $objectManager->create('\Magento\Checkout\Model\Session');
+        $shippingAddress = $checkoutSession->getQuote()->getShippingAddress();
+
         $result = $this->_rateResultFactory->create();
         $am = $this->getAllowedMethods();
         foreach ($am as $key => $_) {
             if ($this->getConfigData($key)) {
-                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                 /** @var \Magento\Framework\App\State $state */
                 $state = $objectManager->get('\Magento\Framework\App\State');
                 $_pricIncl = $this->getConfigData('price_incl');
@@ -124,7 +129,6 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                     $total = $object->getQuote()->getSubtotal();
                     $grandTotal = $object->getQuote()->getGrandTotal();
                 } else {
-                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                     $total = $objectManager->create('\Magento\Checkout\Model\Session')
                         ->getQuote()->getSubtotal();
 
@@ -168,16 +172,12 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                         if (strpos(strtolower($key), 'postnl') !== false) {
                             $carrierTitle = 'PostNL';
 
-
                             if ($this->getConfigData('postnl_show_expected_delivery_date')) {
-                                /** @var \Magento\Checkout\Model\Session $checkoutSession */
-                                $checkoutSession = $objectManager->create('\Magento\Checkout\Model\Session');
-
                                 $sendDay = new DateTime();
                                 if (!$this->isBeforeLastShippingTime($this->getConfigData('postnl_last_shipping_time'))) {
                                     $sendDay->add(new DateInterval('P1D'));
                                 }
-                                $shippingAddress = $checkoutSession->getQuote()->getShippingAddress();
+
                                 $deliveryDate = $this->getDeliveryDate(
                                     'PostNL',
                                     $sendDay,
@@ -193,19 +193,15 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                             $carrierTitle = 'DHL';
 
                             if ($this->getConfigData('dhl_show_expected_delivery_date')) {
-                                /** @var \Magento\Checkout\Model\Session $checkoutSession */
-                                $checkoutSession = $objectManager->create('\Magento\Checkout\Model\Session');
-
                                 $sendDay = new DateTime();
                                 if (!$this->isBeforeLastShippingTime($this->getConfigData('dhl_last_shipping_time'))) {
                                     $sendDay->add(new DateInterval('P1D'));
                                 }
 
-                                $shippingAddress = $checkoutSession->getQuote()->getShippingAddress();
                                 $deliveryDate = $this->getDeliveryDate(
                                     'DHL',
                                     $sendDay,
-                                    $shippingAddress->getPostcode(),
+                                    $shippingAddress->getPostcode()
                                 );
 
                                 if ($deliveryDate) {
@@ -315,6 +311,10 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         $rawDate = $responseJson[$carrier]['Date'] ?? false;
 
         if (!$rawDate) {
+            $this->_logger->error(sprintf(
+                'Failed to get expected delivery date, body:\n%s',
+                $responseBody
+            ));
             return false;
         }
 
