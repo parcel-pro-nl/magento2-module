@@ -76,7 +76,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
         $matches = explode('_', $key);
         if ($matches[0] === 'dhl') {
-            $rate->setCarrierTitle($this->getConfigData('dhl_title') . "line79");
+            $rate->setCarrierTitle($this->getConfigData('dhl_title'));
         }
         if ($matches[0] === 'postnl') {
             $rate->setCarrierTitle($this->getConfigData('postnl_title'));
