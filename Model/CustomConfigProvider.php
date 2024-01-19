@@ -25,13 +25,15 @@ class CustomConfigProvider implements ConfigProviderInterface
     {
         $config = $this->getScopeConfig()->getValue('carriers/parcelpro', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 
-        $gebruikerid = $config["gebruiker_id"];
+        if (isset($config["gebruiker_id"])) {
+            $gebruikerid = $config["gebruiker_id"];
+            $config = [
+                'config' => [
+                    'gebruikerID' => $gebruikerid
+                ]
+            ];
+        }
 
-        $config = [
-            'config' => [
-                'gebruikerID' => $gebruikerid
-            ]
-        ];
         return $config;
     }
 }

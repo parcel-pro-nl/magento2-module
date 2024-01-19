@@ -4,7 +4,13 @@
 
 ### New
 
-- Optie om verwachte bezorgdatum voor PostNL weer te geven toegevoegd
+- Optie om verwachte bezorgdatum voor PostNL en DHL weer te geven toegevoegd
+
+## 2.17.2 - 2024-01-18
+
+### Fixes
+
+- Fix error wanneer `gebruiker_id` config niet bestaat
 
 ## 2.17.1 - 2023-11-14
 
@@ -105,7 +111,6 @@
 
 - Afdrukken en aanmelden van zendingen(batch)
 - Status aanpassen na afdrukken
-
 
 ## 2.8.0 - 2019-08-30
 
