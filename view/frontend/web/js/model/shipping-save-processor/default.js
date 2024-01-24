@@ -65,10 +65,10 @@ define(
 
                 payload = {
                     addressInformation: {
-                        'shipping_address': quote.shippingAddress(),
-                        'billing_address': quote.billingAddress(),
-                        'shipping_method_code': quote.shippingMethod()['method_code'],
-                        'shipping_carrier_code': quote.shippingMethod()['carrier_code']
+                        shipping_address: quote.shippingAddress(),
+                        billing_address: quote.billingAddress(),
+                        shipping_method_code: quote.shippingMethod().method_code,
+                        shipping_carrier_code: quote.shippingMethod().carrier_code
                     }
                 };
 
@@ -82,7 +82,7 @@ define(
                 ).done(
                     function (response) {
                         quote.setTotals(response.totals);
-                        paymentService.setPaymentMethods(methodConverter(response['payment_methods']));
+                        paymentService.setPaymentMethods(methodConverter(response.payment_methods));
                         fullScreenLoader.stopLoader();
                     }
                 ).fail(
