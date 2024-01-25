@@ -26,8 +26,8 @@ dx php bin/magento module:enable --clear-static-content Parcelpro_Shipment
 dx rm -r generated
 
 # Update the Magento setup and flush the cache.
-dx php bin/magento setup:upgrade
 dx php bin/magento setup:di:compile
+dx php bin/magento setup:upgrade
 dx php bin/magento setup:static-content:deploy -f
 dx php bin/magento cache:clean
 dx php bin/magento cache:flush

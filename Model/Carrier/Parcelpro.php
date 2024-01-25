@@ -2,25 +2,24 @@
 
 namespace Parcelpro\Shipment\Model\Carrier;
 
+use DateInterval;
+use DateTime;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Shipping\Model\Rate\Result;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     \Magento\Shipping\Model\Carrier\CarrierInterface
 {
-    /**
-     * @var string
-     */
     protected $_code = 'parcelpro';
 
-    /**
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory
-     * @param \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory
-     * @param array $data
-     */
+    /** @var \Magento\Framework\Locale\Resolver */
+    protected $localeResolver;
+
+    private $apiUrl = 'https://login.parcelpro.nl';
+
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory,
@@ -28,11 +27,13 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
         \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
         \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
         \Magento\Framework\Serialize\Serializer\Json $serialize,
+        \Magento\Framework\Locale\Resolver $localeResolver,
         array $data = []
     ) {
         $this->_rateResultFactory = $rateResultFactory;
         $this->_rateMethodFactory = $rateMethodFactory;
         $this->serialize = $serialize;
+        $this->localeResolver = $localeResolver;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
 
@@ -110,11 +111,17 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
             return false;
         }
 
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+        /** @var \Magento\Checkout\Model\Session $checkoutSession */
+        $checkoutSession = $objectManager->create('\Magento\Checkout\Model\Session');
+        $shippingAddress = $checkoutSession->getQuote()->getShippingAddress();
+
         $result = $this->_rateResultFactory->create();
         $am = $this->getAllowedMethods();
         foreach ($am as $key => $_) {
             if ($this->getConfigData($key)) {
-                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                /** @var \Magento\Framework\App\State $state */
                 $state = $objectManager->get('\Magento\Framework\App\State');
                 $_pricIncl = $this->getConfigData('price_incl');
                 if ($state->getAreaCode() == \Magento\Framework\App\Area::AREA_ADMINHTML) {
@@ -122,7 +129,6 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                     $total = $object->getQuote()->getSubtotal();
                     $grandTotal = $object->getQuote()->getGrandTotal();
                 } else {
-                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
                     $total = $objectManager->create('\Magento\Checkout\Model\Session')
                         ->getQuote()->getSubtotal();
 
@@ -153,7 +159,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                             if (is_null($pricerule['btw_tarief'])) {
                                 $pricerule['btw_tarief'] = 0;
                             }
-                            $shippingPrice = ( (float)$pricerule['btw_tarief'] ? ( (float)$pricerule['price'] + ((float)$pricerule['price'] / 100 ) * (float)$pricerule['btw_tarief'] ) : (float)$pricerule['price'] );
+                            $shippingPrice = ((float)$pricerule['btw_tarief'] ? ((float)$pricerule['price'] + ((float)$pricerule['price'] / 100) * (float)$pricerule['btw_tarief']) : (float)$pricerule['price']);
                             break;
                         }
                     }
@@ -164,9 +170,45 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                         $method->setCarrier($this->_code);
 
                         if (strpos(strtolower($key), 'postnl') !== false) {
-                            $method->setCarrierTitle('PostNL');
+                            $carrierTitle = 'PostNL';
+
+                            if ($this->getConfigData('postnl_show_expected_delivery_date')) {
+                                $sendDay = new DateTime();
+                                if (!$this->isBeforeLastShippingTime($this->getConfigData('postnl_last_shipping_time'))) {
+                                    $sendDay->add(new DateInterval('P1D'));
+                                }
+
+                                $deliveryDate = $this->getDeliveryDate(
+                                    'PostNL',
+                                    $sendDay,
+                                    $shippingAddress->getPostcode()
+                                );
+
+                                if ($deliveryDate) {
+                                    $carrierTitle .= ' (' . $this->formatDeliveryDate($deliveryDate) . ')';
+                                }
+                            }
+                            $method->setCarrierTitle($carrierTitle);
                         } elseif (strpos(strtolower($key), 'dhl') !== false) {
-                            $method->setCarrierTitle('DHL');
+                            $carrierTitle = 'DHL';
+
+                            if ($this->getConfigData('dhl_show_expected_delivery_date')) {
+                                $sendDay = new DateTime();
+                                if (!$this->isBeforeLastShippingTime($this->getConfigData('dhl_last_shipping_time'))) {
+                                    $sendDay->add(new DateInterval('P1D'));
+                                }
+
+                                $deliveryDate = $this->getDeliveryDate(
+                                    'DHL',
+                                    $sendDay,
+                                    $shippingAddress->getPostcode()
+                                );
+
+                                if ($deliveryDate) {
+                                    $carrierTitle .= ' (' . $this->formatDeliveryDate($deliveryDate) . ')';
+                                }
+                            }
+                            $method->setCarrierTitle($carrierTitle);
                         } elseif (strpos(strtolower($key), 'vsp') !== false) {
                             $method->setCarrierTitle('Van Straaten Post');
                         } elseif (strpos(strtolower($key), 'sameday') !== false) {
@@ -192,7 +234,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                                 if (is_null($pricerule['btw_tarief'])) {
                                     $pricerule['btw_tarief'] = 0;
                                 }
-                                $shippingPrice = ( (float)$pricerule['btw_tarief'] ? ( (float)$pricerule['price'] + ((float)$pricerule['price'] / 100 ) * (float)$pricerule['btw_tarief'] ) : (float)$pricerule['price'] );
+                                $shippingPrice = ((float)$pricerule['btw_tarief'] ? ((float)$pricerule['price'] + ((float)$pricerule['price'] / 100) * (float)$pricerule['btw_tarief']) : (float)$pricerule['price']);
 
                                 if ($shippingPrice !== false) {
                                     $method = $this->_rateMethodFactory->create();
@@ -216,5 +258,93 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
             }
         }
         return $result;
+    }
+
+    private function getDeliveryDate(string $carrier, \DateTimeInterface $dateTime, $postcode)
+    {
+        if (!$postcode) {
+            return false;
+        }
+
+        $date = $dateTime->format('Y-m-d');
+        $userId = $this->getConfigData('gebruiker_id');
+        $apiKey = $this->getConfigData('api_key');
+
+        $query = http_build_query([
+            'Startdatum' => $date,
+            'Postcode' => $postcode,
+            'GebruikerId' => $userId,
+            'Map' => true,
+        ]);
+
+        $curlHandle = curl_init();
+        curl_setopt_array($curlHandle, [
+            CURLOPT_URL => $this->apiUrl . '/api/v3/timeframes.php?' . $query,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Digest: ' . hash_hmac(
+                    "sha256",
+                    sprintf('GebruikerId=%sPostcode=%sStartdatum=%s', $userId, $postcode, $date),
+                    $apiKey
+                ),
+            ],
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HEADER => false,
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
+
+        $responseBody = curl_exec($curlHandle);
+        $responseCode = curl_getinfo($curlHandle, CURLINFO_RESPONSE_CODE);
+
+        curl_close($curlHandle);
+
+        if ($responseCode !== 200) {
+            $this->_logger->error(sprintf(
+                'Failed to get expected delivery date, response code %s, body:\n%s',
+                $responseCode,
+                $responseBody
+            ));
+            return false;
+        }
+
+        $responseJson = json_decode($responseBody, true);
+        $rawDate = $responseJson[$carrier]['Date'] ?? false;
+
+        if (!$rawDate) {
+            $this->_logger->error(sprintf(
+                'Failed to get expected delivery date, body:\n%s',
+                $responseBody
+            ));
+            return false;
+        }
+
+        return \DateTimeImmutable::createFromFormat('Y-m-d', $rawDate);
+    }
+
+    private function formatDeliveryDate(\DateTimeInterface $date)
+    {
+        $locale = $this->localeResolver->getLocale();
+        return \IntlDateFormatter::formatObject($date, 'd MMMM', $locale);
+    }
+
+    private function isBeforeLastShippingTime($rawLastTime): bool
+    {
+        if (!$rawLastTime) {
+            return true;
+        }
+
+        try {
+            $parsed = new DateTime($rawLastTime);
+        } catch (\Exception $e) {
+            $this->_logger->error(sprintf(
+                'Failed to parse last shipping time (%s): %s',
+                $rawLastTime,
+                $e->getMessage()
+            ));
+            return true;
+        }
+
+        $now = new DateTime();
+        return $now < $parsed;
     }
 }

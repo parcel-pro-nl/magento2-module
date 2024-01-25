@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.18.0 - 2024-01-25
+
+### New
+
+- Optie om verwachte bezorgdatum voor PostNL en DHL weer te geven toegevoegd
+
 ## 2.17.2 - 2024-01-18
 
 ### Fixes
