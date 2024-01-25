@@ -19,5 +19,6 @@ jobs:
       - uses: php-actions/composer@v6
         with:
           args: --ignore-platform-reqs
+          php_version: 8.2
       - run: composer cs:check
       - run: composer md
