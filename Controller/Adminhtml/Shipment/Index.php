@@ -167,6 +167,19 @@ class Index extends \Magento\Backend\App\Action
                 throw new LocalizedException(__(sprintf("De zending is niet succesvol aangemeld bij ParcelPro foutcode: %s, melding: %s", $response_code, $response_body['omschrijving']), 10));
             }
 
+            /**
+             * TODO: Handle multiple barcodes. Response body:
+             * {
+             * "Id": "55593501",
+             * "Barcode": "3SYTIE15425481",
+             * "LabelUrl": "\/api\/label.php?GebruikerId=31427&ZendingId=55593501&HmacSha256=ed99e343cd7ff741bd18b76468a6083d25f1a29b1e0c332c90b4b7a2ec8b6af6",
+             * "TrackingUrl": "http:\/\/postnl.nl\/tracktrace\/?B=3SYTIE15425481&P=6531JC&D=NL&T=C",
+             * "Type": "Standaard pakket",
+             * "Carrier": "PostNL",
+             * "Barcodes": ["3SYTIE15425481", "3SYTIE15425482"]
+             * }
+             */
+
             if (isset($response_body['Barcode'])) {
                 $firstTwoCharOfBarcode = substr($response_body['Barcode'], 0, 2);
                 $carrier = false;
