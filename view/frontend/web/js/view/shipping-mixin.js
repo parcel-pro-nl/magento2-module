@@ -50,6 +50,7 @@ define(
     ) {
         'use strict';
 
+        var instance = null;
         var popUp = null;
         var locatiekiezerHost = "https://login.parcelpro.nl";
         function ParcelProKiezerUrl() {
@@ -89,6 +90,7 @@ define(
 
         function popup_close() {
             jQuery('#modal').hide();
+            instance.validateShippingInformation();
         }
 
         function popup_submit(data) {
@@ -258,8 +260,22 @@ define(
                       }
                     }
 
-                    return this._super();
+                    this.triggerShippingDataValidateEvent();
+
+                    this.errorValidationMessage(false);
+
+                    checkoutDataResolver.resolveShippingAddress();
+
+                    return true;
                 },
+
+                triggerShippingDataValidateEvent: function () {
+                    this.source.trigger('shippingAddress.data.validate');
+
+                    if (this.source.get('shippingAddress.custom_attributes')) {
+                        this.source.trigger('shippingAddress.custom_attributes.data.validate');
+                    }
+                }                
             });
         };
     }

@@ -12,7 +12,7 @@ define(
         'use strict';
 
         return function () {
-            return shippingSaveProcessor.saveShippingInformation(quote.shippingAddress().getType());
-        }
+            return shippingSaveProcessor.saveShippingInformation(quote.shippingAddress()?.getType());
+        };
     }
 );
