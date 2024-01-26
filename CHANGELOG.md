@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.18.1 - 2024-01-26
+
+### Fixes
+
+- Fixes voor gebruik met Amasty one-step checkout
+
 ## 2.18.0 - 2024-01-25
 
 ### New
