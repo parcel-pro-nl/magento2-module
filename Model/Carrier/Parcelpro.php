@@ -136,6 +136,8 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                         ->getQuote()->getGrandTotal();
                 }
 
+                $freeBoxes = $this->getFreeBoxesCount($request);
+
                 if ($_pricIncl) {
                     $total = $grandTotal; // Verzendkosten berekenen op basis van bedrag incl. BTW
                 }
@@ -218,8 +220,8 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
                         }
                         $method->setMethod($key);
                         $method->setMethodTitle($pricerule['titel']);
-                        $method->setPrice($request->getFreeShipping() === true ? 0 : $shippingPrice);
-                        $method->setCost($request->getFreeShipping() === true ? 0 : $shippingPrice);
+                        $method->setPrice($request->getFreeShipping() === true || $request->getPackageQty() == $freeBoxes ? 0 : $shippingPrice);
+                        $method->setCost($request->getFreeShipping() === true || $request->getPackageQty() == $freeBoxes ? 0 : $shippingPrice);
                         $result->append($method);
                     }
 
@@ -244,8 +246,8 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
                                     $method->setMethod($key . "_" . $counter);
                                     $method->setMethodTitle($pricerule['titel']);
-                                    $method->setPrice($request->getFreeShipping() === true ? 0 : $shippingPrice);
-                                    $method->setCost($request->getFreeShipping() === true ? 0 : $shippingPrice);
+                                    $method->setPrice($request->getFreeShipping() === true || $request->getPackageQty() == $freeBoxes ? 0 : $shippingPrice);
+                                    $method->setCost($request->getFreeShipping() === true || $request->getPackageQty() == $freeBoxes ? 0 : $shippingPrice);
                                     $result->append($method);
                                 }
                             }
@@ -346,5 +348,43 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
 
         $now = new DateTime();
         return $now < $parsed;
+    }
+
+    /**
+     * @param RateRequest $request
+     * @return int
+     */
+    private function getFreeBoxesCount(RateRequest $request)
+    {
+        $freeBoxes = 0;
+        if ($request->getAllItems()) {
+            foreach ($request->getAllItems() as $item) {
+                if ($item->getProduct()->isVirtual() || $item->getParentItem()) {
+                    continue;
+                }
+
+                if ($item->getHasChildren() && $item->isShipSeparately()) {
+                    $freeBoxes += $this->getFreeBoxesCountFromChildren($item);
+                } elseif ($item->getFreeShipping()) {
+                    $freeBoxes += $item->getQty();
+                }
+            }
+        }
+        return $freeBoxes;
+    }
+
+    /**
+     * @param mixed $item
+     * @return mixed
+     */
+    private function getFreeBoxesCountFromChildren($item)
+    {
+        $freeBoxes = 0;
+        foreach ($item->getChildren() as $child) {
+            if ($child->getFreeShipping() && !$child->getProduct()->isVirtual()) {
+                $freeBoxes += $item->getQty() * $child->getQty();
+            }
+        }
+        return $freeBoxes;
     }
 }
