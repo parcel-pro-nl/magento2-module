@@ -80,6 +80,10 @@ define(
                         }
                     }
                 }
+            }else if(typeof checkoutData.getShippingAddressFromData() !== "undefined"){
+              postcode = checkoutData.getShippingAddressFromData().postcode;
+              street = checkoutData.getShippingAddressFromData().street;
+              country = checkoutData.getShippingAddressFromData().country_id;
             }else{
                 postcode = jQuery('input[name=postcode]').val();
                 street = jQuery('input[name^=street]').first().val();
@@ -160,6 +164,8 @@ define(
 
                 initialize: function () {
                     this._super();
+
+                    instance = this;
 
                     this.isFormPopUpVisible.subscribe(function (value) {
                         if (value) {
@@ -275,7 +281,7 @@ define(
                     if (this.source.get('shippingAddress.custom_attributes')) {
                         this.source.trigger('shippingAddress.custom_attributes.data.validate');
                     }
-                }                
+                }
             });
         };
     }
