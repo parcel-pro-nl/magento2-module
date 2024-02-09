@@ -6,7 +6,8 @@ config = {
             "Amasty_Checkout/template/onepage/3columns.html":"Parcelpro_Shipment/template/onepage/3columns.html",
             // 'Magento_Checkout/js/view/billing-address': "Parcelpro_Shipment/js/view/billing-address",
             "Amasty_Checkout/template/onepage/shipping/address.html": "Parcelpro_Shipment/template/amastyonepage/shipping.html",
-            "Amasty_Checkout/template/onepage/shipping/methods.html": "Parcelpro_Shipment/template/amastyonepage/methods.html"
+            "Amasty_Checkout/template/onepage/shipping/methods.html": "Parcelpro_Shipment/template/amastyonepage/methods.html",
+            "Amasty_CheckoutCore/template/onepage/shipping/methods.html": "Parcelpro_Shipment/template/amastyonepage/methods.html"
             /*
             ** FireCheckout ondersteuning
             ** Onderstaande regel activeren zodat gekozen pakketpunt opgeslagen wordt bij de order.
@@ -18,6 +19,9 @@ config = {
       mixins: {
         "Magento_Checkout/js/view/billing-address": {
             "Parcelpro_Shipment/js/view/billing-address-mixin": true
+        },
+        "Magento_Checkout/js/model/shipping-save-processor/default" : {
+            "Parcelpro_Shipment/js/model/shipping-save-processor/default-mixin" : true
         },
         "Amasty_Checkout/js/action/set-shipping-information": {
           "Parcelpro_Shipment/js/action/set-shipping-information-mixin" : true
