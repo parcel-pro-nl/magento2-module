@@ -33,7 +33,7 @@ class PluginBefore
                 $result = $result[count($result) - 1];
             }
 
-            if ($result && !is_null($result["barcode"])) {
+            if ($result && $result['id']) {
                 $buttonList->add(
                     'print_label',
                     ['label' => __('Print label'), 'onclick' => 'setLocation(\'' . $context->getUrl("pp_shipment/shipment/printlabel") . '\')', 'class' => 'save'],
