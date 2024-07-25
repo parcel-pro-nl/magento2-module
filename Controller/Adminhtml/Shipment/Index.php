@@ -167,7 +167,9 @@ class Index extends \Magento\Backend\App\Action
                 throw new LocalizedException(__(sprintf("De zending is niet succesvol aangemeld bij ParcelPro foutcode: %s, melding: %s", $response_code, $response_body['omschrijving']), 10));
             }
 
-            if (isset($response_body['Barcode'])) {
+            $carrier = $response_body['Carrier'];
+
+            if (isset($response_body['Barcode']) && $response_body['Barcode']) {
                 $firstTwoCharOfBarcode = substr($response_body['Barcode'], 0, 2);
                 $carrier = false;
                 if (isset($shipping_title) && array_key_exists($shipping_title, $config)) {
@@ -179,28 +181,27 @@ class Index extends \Magento\Backend\App\Action
                         $carrier = "PostNL via Parcel Pro";
                     } elseif ($firstTwoCharOfBarcode === "JJ") {
                         $carrier = "DHL via Parcel Pro";
-                    } else {
-                        $carrier = $response_body['Carrier'];
                     }
                 }
 
                 $data = ['zending_id' => $response_body['Id'], 'order_id' => $order_id, 'barcode' => $response_body['Barcode'], 'carrier' => $carrier, 'url' => $response_body['TrackingUrl'], 'label_url' => $response_body['LabelUrl']];
-
-
-                $collection = $objectManager->create('Parcelpro\Shipment\Model\Resource\Parcelpro\CollectionFactory');
-                $collection = $collection->create()->addFieldToFilter('order_id', $order_id)->getFirstItem();
-
-                $result = $collection->getData();
-                if ($result && isset($result['id'])) {
-                    $data['id'] = $result['id'];
-                }
-
-                $parcelproModel = $this->_modelParcelproFactory->create();
-                $parcelproModel->setData($data);
-                $parcelproModel->save();
-
-                return sprintf("Order %s succesvol aangemaakt", $order_id);
+            } else {
+                $data = ['zending_id' => $response_body['Id'], 'order_id' => $order_id, 'carrier' => $carrier, 'label_url' => $response_body['LabelUrl']];
             }
+
+            $collection = $objectManager->create('Parcelpro\Shipment\Model\Resource\Parcelpro\CollectionFactory');
+            $collection = $collection->create()->addFieldToFilter('order_id', $order_id)->getFirstItem();
+
+            $result = $collection->getData();
+            if ($result && isset($result['id'])) {
+                $data['id'] = $result['id'];
+            }
+
+            $parcelproModel = $this->_modelParcelproFactory->create();
+            $parcelproModel->setData($data);
+            $parcelproModel->save();
+
+            return sprintf("Order %s succesvol aangemaakt", $order_id);
         } catch (LocalizedException $e) {
             return sprintf("Order %s geeft een error", $order_id);
         }

@@ -46,7 +46,7 @@ class UpdateOrder extends \Magento\Backend\App\Action
         }
 
         // Controleren of de zending al is aangemeld.
-        if ($pp_result && $pp_result["barcode"] != "") {
+        if ($pp_result && $pp_result['id']) {
             $this->messageManager->addErrorMessage(__("Actie niet mogelijk: zending al aangemeld."));
             $this->_redirect($this->_redirect->getRefererUrl());
             return;
