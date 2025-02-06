@@ -53,6 +53,7 @@ class Parcelpro extends \Magento\Shipping\Model\Carrier\AbstractCarrier implemen
             'postnl_pricerule' => 'Pricerule',
             'dhl_afleveradres' => 'Afleveradres',
             'dhl_parcelshop' => 'Parcelshop',
+            'dhl_vandaag' => 'Vandaag',
             'dhl_nbb' => 'Niet bij buren',
             'dhl_hvo' => 'Handtekening',
             'dhl_ez' => 'Extra zeker',
