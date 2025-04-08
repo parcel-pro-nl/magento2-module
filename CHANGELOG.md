@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.18.5 - 2025-02-06
+
+### New
+
+- DHL Vandaag toegevoegd
+
+
+## 2.18.4 - 2024-07-25
+
+### Fixes
+
+- Fixes voor gebruik met Magento
+
 ## 2.18.1 - 2024-01-26
 
 ### Fixes
