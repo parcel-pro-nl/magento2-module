@@ -1,4 +1,10 @@
 # Changelog
+## 2.18.7 - 2025-04-09
+
+### Fixes
+
+- DHL Vandaag ook in system.xml toegevoegd
+
 ## 2.18.6 - 2025-04-09
 
 ### Fixes

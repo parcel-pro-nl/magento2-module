@@ -9,7 +9,7 @@
                     <tooltip>
                         <![CDATA[Versie van onze plug-in]]>
                     </tooltip>
-                    <comment>2.18.6</comment>
+                    <comment>2.18.7</comment>
                 </field>
                 <field id="active" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
@@ -133,6 +133,11 @@
                 </field>
                 <field id="dhl_parcelshop" translate="label" type="text" sortOrder="320" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>DHL Parcelshop</label>
+                    <frontend_model>Parcelpro\Shipment\Block\Adminhtml\System\Config\Form\Field\Countriesmap</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+                <field id="dhl_vandaag" translate="label" type="text" sortOrder="330" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>DHL Vandaag</label>
                     <frontend_model>Parcelpro\Shipment\Block\Adminhtml\System\Config\Form\Field\Countriesmap</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                 </field>
