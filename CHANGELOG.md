@@ -1,4 +1,9 @@
 # Changelog
+## 2.18.6 - 2025-04-09
+
+### Fixes
+
+- Versie opgehoogd naar 2.18.6 voor DHL Vandaag
 
 ## 2.18.5 - 2025-02-06
 
