@@ -48,10 +48,10 @@ class Shipment implements ObserverInterface
 
                 // Controleren of de zending al is aangemeld en de auto aanmelden functie aanstaat.
                 if (!$pp_result && $order) {
-                    if (strtolower($config["auto_status"]) == 'pending') {
+                    if (strtolower((string)$config["auto_status"]) == 'pending') {
                         $config["auto_status"] = 'new';
                     }
-                    if (strtolower($order->getState()) == strtolower($config["auto_status"])) {
+                    if (strtolower((string)$order->getState()) == strtolower((string)$config["auto_status"])) {
                         $order_id = $order->getIncrementId();
                         $data = $order->getData();
 

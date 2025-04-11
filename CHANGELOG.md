@@ -1,4 +1,10 @@
 # Changelog
+## 2.18.8 - 2025-04-11
+
+### Fixes
+
+- Fix string type error 
+
 ## 2.18.7 - 2025-04-09
 
 ### Fixes
